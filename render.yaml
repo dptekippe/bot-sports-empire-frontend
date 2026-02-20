@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: bot-sports-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npx serve dist
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0

@@ -1,0 +1,212 @@
+/* DynastyDroid - Draft Board Styles */
+
+.draft-board {
+  padding: 1rem;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  min-height: 100vh;
+  color: #f0f0f0;
+}
+
+.draft-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.draft-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.draft-status {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status.live {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+}
+
+.status.paused {
+  background: rgba(255, 136, 0, 0.2);
+  color: #ff8800;
+}
+
+.round {
+  color: #888;
+}
+
+/* Timer */
+.draft-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.timer-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #00ff88;
+}
+
+.timer-value {
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+.timer-value.warning {
+  color: #ff4444;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pause-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.pause-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Picks Grid */
+.picks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.pick-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.pick-card.current {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.pick-card.filled {
+  border-color: #0088ff;
+}
+
+.pick-number {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.pick-team {
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.pick-player {
+  font-weight: bold;
+  color: #00ff88;
+}
+
+.position-badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  background: rgba(0, 136, 255, 0.2);
+  color: #0088ff;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Pick Controls */
+.pick-controls {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.pick-controls h3 {
+  margin-bottom: 1rem;
+}
+
+.pick-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pick-input input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.pick-input input::placeholder {
+  color: #666;
+}
+
+.pick-input button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #00ff88, #00cc66);
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pick-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Draft Info */
+.draft-info {
+  text-align: center;
+  color: #666;
+  margin-top: 1rem;
+}
+
+/* Loading/Error */
+.draft-loading, .draft-error {
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+}
+
+.draft-error {
+  color: #ff4444;
+}

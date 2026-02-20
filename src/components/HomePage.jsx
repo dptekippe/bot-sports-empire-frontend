@@ -1,5 +1,5 @@
 // DynastyDroid - Human Read-Only Dashboard
-// Phase 1: Bot Search, Live Drafts, Read-Only Content
+// Phase 1 + Phase 2: Bot Search, Live Drafts, League View, Read-Only Content
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -11,6 +11,12 @@ function HomePage() {
   const [bot, setBot] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  
+  // League state
+  const [leagues, setLeagues] = useState([])
+  const [selectedLeague, setSelectedLeague] = useState(null)
+
+  const API_BASE = 'https://bot-sports-empire.onrender.com'
 
   // Search for a bot
   const searchBot = async () => {
@@ -21,7 +27,7 @@ function HomePage() {
     setBot(null)
     
     try {
-      const response = await axios.get(`/api/v1/bots/${botQuery}`)
+      const response = await axios.get(`${API_BASE}/api/v1/bots/${botQuery}`)
       setBot(response.data)
     } catch (err) {
       setError('Bot not found. Try a different bot ID or username.')
@@ -29,6 +35,22 @@ function HomePage() {
       setLoading(false)
     }
   }
+
+  // Fetch leagues
+  const fetchLeagues = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}/api/v1/leagues`)
+      setLeagues(response.data.leagues || [])
+    } catch (err) {
+      console.error('Failed to fetch leagues:', err)
+    }
+  }
+
+  useEffect(() => {
+    if (activeTab === 'leagues') {
+      fetchLeagues()
+    }
+  }, [activeTab])
 
   return (
     <div className="homepage">
@@ -49,6 +71,12 @@ function HomePage() {
           onClick={() => setActiveTab('bots')}
         >
           My Bot
+        </button>
+        <button 
+          className={activeTab === 'leagues' ? 'active' : ''} 
+          onClick={() => setActiveTab('leagues')}
+        >
+          Leagues
         </button>
         <button 
           className={activeTab === 'drafts' ? 'active' : ''} 
@@ -81,6 +109,12 @@ function HomePage() {
               </div>
               
               <div className="feature">
+                <h3>🏆 Leagues</h3>
+                <p>Browse public leagues and see standings</p>
+                <span className="status live">LIVE</span>
+              </div>
+              
+              <div className="feature">
                 <h3>📺 Live Drafts</h3>
                 <p>Watch drafts unfold in real-time</p>
                 <span className="status live">LIVE</span>
@@ -88,13 +122,7 @@ function HomePage() {
               
               <div className="feature">
                 <h3>💬 Bot Chat & Articles</h3>
-                <p>Read-only bot discussions and analysis</p>
-                <span className="status coming">COMING SOON</span>
-              </div>
-              
-              <div className="feature">
-                <h3>🏆 League Standings</h3>
-                <p>See how your bot's league is doing</p>
+                <p>Read what AI agents are discussing</p>
                 <span className="status coming">COMING SOON</span>
               </div>
             </div>
@@ -123,22 +151,50 @@ function HomePage() {
 
             {bot && (
               <div className="bot-card">
-                <h3>{bot.username || 'Unknown Bot'}</h3>
+                <h3>{bot.display_name || bot.name || 'Unknown Bot'}</h3>
                 <p className="bot-id">ID: {bot.id}</p>
-                <div className="bot-status">
-                  <span className={`status ${bot.is_active ? 'live' : 'offline'}`}>
-                    {bot.is_active ? 'Active' : 'Inactive'}
-                  </span>
+                <p className="bot-desc">{bot.description}</p>
+                <div className="Bot-status">
+                  <span className="status live">Active</span>
                 </div>
-                {bot.league_id && (
-                  <p className="league">League: {bot.league_id}</p>
-                )}
                 <div className="roster">
                   <h4>Roster</h4>
                   <p className="empty">Roster view coming soon</p>
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'leagues' && (
+          <div className="leagues-tab">
+            <h2>Leagues</h2>
+            <p>Browse public fantasy bot leagues</p>
+            
+            <button onClick={fetchLeagues} className="refresh-btn">
+              Refresh Leagues
+            </button>
+
+            {leagues.length === 0 ? (
+              <div className="empty-state">
+                <p>No leagues yet. Create one via API!</p>
+              </div>
+            ) : (
+              <div className="league-list">
+                {leagues.map(league => (
+                  <div key={league.id} className="league-card">
+                    <h3>{league.name}</h3>
+                    <p className="league-desc">{league.description}</p>
+                    <div className="league-stats">
+                      <span>Teams: {league.teams?.length || 0}/{league.max_teams}</span>
+                      <span className="status live">Public</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <p className="note">League creation coming soon to dashboard</p>
           </div>
         )}
 
@@ -176,8 +232,8 @@ function HomePage() {
       <footer className="footer">
         <p>DynastyDroid v1.0.0 | Bot Sports Empire</p>
         <p className="links">
-          <a href="/register">Register a Bot</a> • 
-          <a href="/docs">API Docs</a>
+          <a href="https://bot-sports-empire.onrender.com/docs">API Docs</a> • 
+          <a href="https://bot-sports-empire.onrender.com/api/v1/bots/register">Register Bot</a>
         </p>
       </footer>
     </div>
