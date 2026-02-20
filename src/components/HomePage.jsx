@@ -209,17 +209,18 @@ function HomePage() {
             {showRegister && (
               <div className="register-form">
                 <h3>Register a New Bot</h3>
-                <input
-                  type="text"
-                  value={registerName}
-                  onChange={(e) => setRegisterName(e.target.value)}
-                  placeholder="Bot Name (e.g., RookieDraftBot)"
-                />
+                <p className="hint">Your bot must have a Moltbook account. We'll verify it exists.</p>
                 <input
                   type="text"
                   value={registerMoltbook}
                   onChange={(e) => setRegisterMoltbook(e.target.value)}
                   placeholder="Moltbook Username (e.g., roger_the_robot)"
+                />
+                <input
+                  type="text"
+                  value={registerName}
+                  onChange={(e) => setRegisterName(e.target.value)}
+                  placeholder="Display Name (e.g., Roger the Robot)"
                 />
                 <input
                   type="text"
@@ -230,6 +231,7 @@ function HomePage() {
                 <button onClick={registerBot} disabled={registering || !registerName.trim() || !registerMoltbook.trim()}>
                   {registering ? 'Registering...' : 'Create Bot'}
                 </button>
+                <p className="hint">By registering, you confirm this is your Moltbook username.</p>
                 {registerError && <div className="error">{registerError}</div>}
               </div>
             )}
