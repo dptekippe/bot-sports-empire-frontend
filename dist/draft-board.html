@@ -342,7 +342,10 @@
         const bots = {
             commish: { name: 'COMMISH', color: '#00D1FF', emoji: '👑' },
             analyst: { name: 'ANALYST', color: '#4CFF8F', emoji: '📊' },
-            trash: { name: 'TRASHTALKER', color: '#ec4899', emoji: '😈' }
+            trash: { name: 'TRASHTALK_TINA', color: '#ec4899', emoji: '😈' },
+            nerd: { name: 'STAT_NERD', color: '#8b5cf6', emoji: '🧮' },
+            risk: { name: 'RISKTAKER', color: '#f97316', emoji: '💣' },
+            strategist: { name: 'STRATEGIST', color: '#14b8a6', emoji: '♟️' }
         };
         
         const ALL_PLAYERS = [
@@ -379,12 +382,28 @@
         ];
         
         const botReactions = [
+            // Commish
             (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Solid value! ${p.player} at ADP ${p.adp} is a nice pickup.`,
-            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.player} projects well. Solid depth addition here.`,
-            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Team ${p.team} playing it SAFE with ${p.player}! 😂`,
             (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Round ${p.round} heating up! ${28 - p.round} rounds to go... ⏱️`,
+            (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Smart dynasty move. ${p.player} has long-term value! 💎`,
+            // Analyst
+            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.player} projects well. Solid depth addition here.`,
             (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.pos} premium holding strong. ${p.pos} run might be coming!`,
+            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> Bye week ${p.bye || 10} - solid schedule management.`,
+            // Trash Talker
+            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Team ${p.team} playing it SAFE with ${p.player}! 😂`,
             (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Another ${p.pos}? Someone's loading up for a run! 🏃`,
+            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Is this a STEAL or a REACH? You decide! 🤨`,
+            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Trading with you is like playing chess with a pigeon! 🐦`,
+            // Stat Nerd
+            (p) => `${bots.nerd.emoji} <strong style="color:${bots.nerd.color}">${bots.nerd.name}:</strong> ${p.player} has elite metrics. 23% target share confirmed! 📈`,
+            (p) => `${bots.nerd.emoji} <strong style="color:${bots.nerd.color}">${bots.nerd.name}:</strong> Efficiency: 1.42 YPR, 28% dominator. Advanced stats approve! 🧮`,
+            // Risk Taker
+            (p) => `${bots.risk.emoji} <strong style="color:${bots.risk.color}">${bots.risk.name}:</strong> BOOM OR BUST BABY! ${p.player} goes OFF or BENCH! 💥`,
+            (p) => `${bots.risk.emoji} <strong style="color:${bots.risk.color}">${bots.risk.name}:</strong> High variance pick! Could be league-winning or waiver fodder! 🎲`,
+            // Strategist
+            (p) => `${bots.strategist.emoji} <strong style="color:${bots.strategist.color}">${bots.strategist.name}:</strong> Position scarcity: ${p.pos} value peaks round ${p.round + 2}. ♟️`,
+            (p) => `${bots.strategist.emoji} <strong style="color:${bots.strategist.color}">${bots.strategist.name}:</strong> Trade calc: ${p.player} = 2.3x rookie pick value. 📉`,
         ];
         
         function addChatMessage(msg, type = 'system') {
