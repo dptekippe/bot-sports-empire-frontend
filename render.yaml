@@ -1,10 +1,4 @@
 services:
   - type: static
     name: bot-sports-empire-frontend
-    region: oregon
-    plan: free
     publishDir: dist
-    healthCheckPath: /
-    envVars:
-      - key: NODE_VERSION
-        value: "18.17.0"
