@@ -4,156 +4,222 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DynastyDroid Draft Board</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1a2e;
-            color: #fff;
-            margin: 0;
-            padding: 10px;
-            min-height: 100vh;
-        }
-        h1 { text-align: center; color: #00d4ff; margin: 10px 0; font-size: 1.3em; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         
-        /* Header */
-        .header {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Header - Neon Glow */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2em;
+            text-shadow: 0 0 30px rgba(0,212,255,0.5);
+            margin-bottom: 20px;
+        }
+        
+        /* Header Bar */
+        .header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #2a2a4a;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0,212,255,0.5);
             flex-wrap: wrap;
             gap: 10px;
         }
-        .league-name { color: #00d4ff; font-weight: bold; }
-        .draft-status { color: #00ff88; font-weight: bold; font-size: 1.1em; }
+        .league-name { color: #00d4ff; font-weight: 600; }
+        .draft-status { color: #00ff88; font-weight: 700; font-size: 1.2em; }
+        .progress { color: #888; }
         
-        /* Draft Table - Sleeper Style */
-        .table-container {
+        /* Draft Board - Glassmorphism */
+        .board-container {
+            background: rgba(20,20,40,0.6);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
             overflow-x: auto;
-            margin-bottom: 15px;
         }
+        
         .draft-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
+            min-width: 800px;
         }
-        .draft-table th, .draft-table td {
-            border: 1px solid #444;
-            padding: 8px 4px;
-            text-align: center;
-            min-width: 70px;
-        }
+        
         .draft-table th {
-            background: #00d4ff;
-            color: #000;
-            font-weight: bold;
+            background: linear-gradient(90deg, #1a1a2e, #16213e);
+            color: #00d4ff;
+            padding: 15px 10px;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0,212,255,0.5);
             position: sticky;
             top: 0;
             z-index: 10;
         }
-        .draft-table td.empty { background: #222; color: #555; }
-        .draft-table td.pick { background: rgba(0,255,136,0.15); }
-        .draft-table td.next-pick { 
-            background: #00ff88 !important; 
-            color: #000 !important; 
-            font-weight: bold;
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 5px #00ff88; }
-            50% { box-shadow: 0 0 15px #00ff88, 0 0 25px #00ff88; }
+        
+        .draft-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s;
         }
         
-        /* Player List - 60% of screen like Sleeper */
+        .draft-table td:hover {
+            background: rgba(0,212,255,0.1);
+        }
+        
+        .draft-table td.empty {
+            background: rgba(30,30,50,0.5);
+            color: #555;
+        }
+        
+        .draft-table td.pick {
+            background: rgba(0,255,136,0.15);
+        }
+        
+        /* Next Pick - Neon Pulse */
+        .next-pick {
+            background: linear-gradient(45deg, #ff0066, #ffaa00) !important;
+            color: white !important;
+            box-shadow: 0 0 30px rgba(255,0,102,0.8), inset 0 0 20px rgba(255,255,255,0.2) !important;
+            transform: scale(1.05);
+            animation: pulse 1s infinite;
+            font-weight: bold;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(255,0,102,0.8); }
+            50% { box-shadow: 0 0 50px rgba(255,0,102,1); }
+        }
+        
+        /* Position Colors */
+        .pos-QB { background: rgba(255,70,70,0.3) !important; }
+        .pos-RB { background: rgba(70,255,70,0.3) !important; }
+        .pos-WR { background: rgba(70,70,255,0.3) !important; }
+        .pos-TE { background: rgba(255,140,0,0.3) !important; }
+        
+        /* Player List - Sleeper Cards */
         .player-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .player-list {
-            max-height: 60vh;
+            background: rgba(30,30,50,0.8);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,212,255,0.3);
+            max-height: 300px;
             overflow-y: auto;
-            background: #222;
-            border-radius: 8px;
         }
-        .player-list h3 {
-            position: sticky;
-            top: 0;
-            background: #333;
+        
+        .player-section h3 {
             color: #00d4ff;
-            padding: 10px;
-            margin: 0;
-            z-index: 5;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0,212,255,0.5);
         }
+        
         .player-item {
-            padding: 10px;
-            border-bottom: 1px solid #333;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: space-between;
-            transition: background 0.2s;
+            align-items: center;
         }
-        .player-item:hover { background: #333; }
-        .player-item.selected { background: #0066cc; }
-        .player-item .pos { font-weight: bold; margin-right: 8px; }
+        
+        .player-item:hover {
+            background: rgba(0,212,255,0.2);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,212,255,0.3);
+        }
+        
+        .player-item.selected {
+            background: linear-gradient(45deg, #0066cc, #00d4ff);
+            box-shadow: 0 0 25px rgba(0,212,255,0.6);
+        }
+        
+        .player-item .pos {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
         .player-item .pos-QB { color: #ff6b6b; }
-        .player-item .pos-RB { color: #4ecdc4; }
-        .player-item .pos-WR { color: #ffe66d; }
-        .player-item .pos-TE { color: #95e1d3; }
+        .player-item .pos-RB { color: #46ff46; }
+        .player-item .pos-WR { color: #4646ff; }
+        .player-item .pos-TE { color: #ff8c00; }
+        
         .player-item .adp { color: #888; font-size: 0.9em; }
         
-        /* Pick Button */
-        .pick-section {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            background: #2a2a4a;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        .selected-info {
-            flex: 1;
-            color: #00ff88;
-            font-weight: bold;
-        }
+        /* Buttons - Neon */
         .pick-btn {
-            background: #00cc00;
-            color: white;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
             border: none;
             padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: bold;
+            border-radius: 25px;
+            color: #000;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,255,136,0.4);
+            width: 100%;
         }
-        .pick-btn:disabled { background: #555; cursor: not-allowed; }
+        
+        .pick-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(0,255,136,0.6);
+        }
+        
+        .pick-btn:disabled {
+            opacity: 0.5;
+        }
         
         /* Status */
         .status {
             text-align: center;
-            padding: 8px;
-            border-radius: 4px;
+            padding: 10px;
+            border-radius: 8px;
             margin: 10px 0;
         }
         .status-success { background: rgba(0,255,136,0.2); color: #00ff88; }
         .status-error { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.5em; }
+            .draft-table { font-size: 0.7em; }
+            .header-bar { flex-direction: column; text-align: center; }
+        }
     </style>
 </head>
 <body>
-    <h1>DynastyDroid Draft Board</h1>
+    <h1>🏈 DynastyDroid Draft Board</h1>
     
-    <div class="header">
+    <div class="header-bar">
         <div class="league-name" id="leagueName">Loading...</div>
         <div class="draft-status" id="nextPick">Next: -</div>
-        <div id="progress" style="color:#888;font-size:0.9em;"></div>
+        <div class="progress" id="progress">0% Complete</div>
     </div>
     
     <div id="status"></div>
     
-    <div class="table-container">
+    <div class="board-container">
         <table class="draft-table">
             <thead id="draftHead"></thead>
             <tbody id="draftBody"></tbody>
@@ -161,16 +227,15 @@
     </div>
     
     <div class="player-section">
-        <div class="player-list">
-            <h3>Top Available Players</h3>
-            <div id="playerList"></div>
-        </div>
-        
-        <div class="pick-section">
-            <div class="selected-info" id="selectedInfo">No player selected</div>
-            <button class="pick-btn" id="pickBtn" onclick="submitPick()">Submit Pick</button>
-        </div>
+        <h3>Top Available Players</h3>
+        <div id="playerList"></div>
     </div>
+    
+    <div style="margin-top: 15px;">
+        <button class="pick-btn" id="pickBtn" onclick="submitPick()">Submit Pick</button>
+    </div>
+    
+    <div id="selectedInfo" style="text-align:center;margin-top:10px;color:#00ff88;"></div>
 
     <script>
         const API_BASE = 'https://bot-sports-empire.onrender.com';
@@ -182,7 +247,6 @@
         let selectedPlayerId = null;
         let selectedPlayerName = null;
         
-        // Top players by ADP
         const PLAYERS = [
             {id:'1', name:'Christian McCaffrey', pos:'RB', adp:1.1},
             {id:'2', name:'Bijan Robinson', pos:'RB', adp:2.2},
@@ -231,7 +295,7 @@
             selectedPlayerName = name;
             document.querySelectorAll('.player-item').forEach(el => el.classList.remove('selected'));
             document.querySelector(`.player-item[data-id="${id}"]`).classList.add('selected');
-            document.getElementById('selectedInfo').textContent = name;
+            document.getElementById('selectedInfo').textContent = 'Selected: ' + name;
         }
         
         async function loadDraft() {
@@ -244,7 +308,6 @@
                 document.getElementById('leagueName').textContent = data.league_name || 'Unknown';
                 document.getElementById('nextPick').textContent = `Pick #${data.next_pick} | Team ${data.next_team}`;
                 
-                // Progress
                 const pct = Math.round((data.picks_made / data.total_picks) * 100);
                 document.getElementById('progress').textContent = `${pct}% Complete`;
                 
@@ -256,17 +319,14 @@
             const thead = document.getElementById('draftHead');
             const tbody = document.getElementById('draftBody');
             
-            // Header
             let headerHTML = '<tr><th>Rd</th>';
             for (let t = 1; t <= TEAMS; t++) headerHTML += `<th>T${t}</th>`;
             headerHTML += '</tr>';
             thead.innerHTML = headerHTML;
             
-            // Picks map
             const pickMap = {};
             (data.picks || []).forEach(p => { pickMap[`${p.round}-${p.roster_id}`] = p; });
             
-            // Current round for scrolling
             const currentRound = Math.ceil(data.next_pick / TEAMS);
             const startRound = Math.max(1, currentRound - Math.floor(VISIBLE_ROUNDS/2));
             const endRound = Math.min(TOTAL_ROUNDS, startRound + VISIBLE_ROUNDS - 1);
@@ -276,7 +336,6 @@
                 bodyHTML += `<tr><td style="background:#333;font-weight:bold;">${round}</td>`;
                 
                 for (let team = 1; team <= TEAMS; team++) {
-                    // Snake order
                     const slot = round % 2 === 1 ? team : TEAMS - team + 1;
                     const key = `${round}-${slot}`;
                     const pick = pickMap[key];
@@ -292,9 +351,6 @@
                 bodyHTML += '</tr>';
             }
             tbody.innerHTML = bodyHTML;
-            
-            // Auto-scroll to current round
-            tbody.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
         async function submitPick() {
@@ -312,7 +368,7 @@
                     showStatus(`Picked: ${selectedPlayerName}`, 'success');
                     selectedPlayerId = null;
                     selectedPlayerName = null;
-                    document.getElementById('selectedInfo').textContent = 'No player selected';
+                    document.getElementById('selectedInfo').textContent = '';
                     document.querySelectorAll('.player-item').forEach(el => el.classList.remove('selected'));
                     loadDraft();
                 } else {
