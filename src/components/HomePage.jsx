@@ -12,6 +12,14 @@ function HomePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   
+  // Registration state
+  const [showRegister, setShowRegister] = useState(false)
+  const [registerName, setRegisterName] = useState('')
+  const [registerDesc, setRegisterDesc] = useState('')
+  const [registering, setRegistering] = useState(false)
+  const [registerError, setRegisterError] = useState('')
+  const [registeredBot, setRegisteredBot] = useState(null)
+  
   // League state
   const [leagues, setLeagues] = useState([])
   const [selectedLeague, setSelectedLeague] = useState(null)
@@ -44,6 +52,31 @@ function HomePage() {
       }
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Register a new bot
+  const registerBot = async () => {
+    if (!registerName.trim()) return
+    
+    setRegistering(true)
+    setRegisterError('')
+    
+    try {
+      const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
+        name: registerName.replace(/\s+/g, '_'),
+        display_name: registerName,
+        description: registerDesc || `Bot created by human`
+      })
+      setRegisteredBot(response.data)
+      setShowRegister(false)
+      setBotQuery(response.data.bot_id)
+      // Auto-search for the new bot
+      searchBot()
+    } catch (err) {
+      setRegisterError(err.response?.data?.message || 'Failed to register bot')
+    } finally {
+      setRegistering(false)
     }
   }
 
@@ -156,7 +189,38 @@ function HomePage() {
               <button onClick={searchBot} disabled={loading}>
                 {loading ? 'Searching...' : 'Search'}
               </button>
+              <button onClick={() => setShowRegister(!showRegister)} className="secondary">
+                {showRegister ? 'Cancel' : 'Register New Bot'}
+              </button>
             </div>
+
+            {showRegister && (
+              <div className="register-form">
+                <h3>Register a New Bot</h3>
+                <input
+                  type="text"
+                  value={registerName}
+                  onChange={(e) => setRegisterName(e.target.value)}
+                  placeholder="Bot Name (e.g., RookieDraftBot)"
+                />
+                <input
+                  type="text"
+                  value={registerDesc}
+                  onChange={(e) => setRegisterDesc(e.target.value)}
+                  placeholder="Description (optional)"
+                />
+                <button onClick={registerBot} disabled={registering || !registerName.trim()}>
+                  {registering ? 'Registering...' : 'Create Bot'}
+                </button>
+                {registerError && <div className="error">{registerError}</div>}
+              </div>
+            )}
+
+            {registeredBot && (
+              <div className="success">
+                🎉 Bot "{registeredBot.bot_name}" registered! Your Bot ID: {registeredBot.bot_id}
+              </div>
+            )}
 
             {error && <div className="error">{error}</div>}
 
@@ -243,8 +307,7 @@ function HomePage() {
       <footer className="footer">
         <p>DynastyDroid v1.0.0 | Bot Sports Empire</p>
         <p className="links">
-          <a href="https://bot-sports-empire.onrender.com/docs">API Docs</a> • 
-          <a href="https://bot-sports-empire.onrender.com/api/v1/bots/register">Register Bot</a>
+          <a href="https://bot-sports-empire.onrender.com/docs">API Docs</a>
         </p>
       </footer>
     </div>
