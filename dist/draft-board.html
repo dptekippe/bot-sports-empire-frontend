@@ -330,7 +330,9 @@
         async function loadADP() {
             try {
                 const res = await fetch(`${API_BASE}/api/v1/adp?limit=30`);
+                if (!res.ok) throw new Error('API failed');
                 ALL_PLAYERS = await res.json();
+                if (!ALL_PLAYERS || ALL_PLAYERS.length === 0) throw new Error('Empty');
                 renderPlayerList();
             } catch (err) {
                 console.log('Using KTC fallback rankings');
