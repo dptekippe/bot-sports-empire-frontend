@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DynastyDroid Draft Board</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        h1 { text-align: center; color: #00d4ff; }
+        .draft-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .next-pick {
+            font-size: 1.5em;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        .draft-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .draft-table th, .draft-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .draft-table th {
+            background: rgba(0,212,255,0.2);
+            color: #00d4ff;
+        }
+        .draft-table tr:nth-child(even) {
+            background: rgba(255,255,255,0.05);
+        }
+        .pick-made {
+            background: rgba(0,255,136,0.2) !important;
+        }
+        .position-QB { color: #ff6b6b; }
+        .position-RB { color: #4ecdc4; }
+        .position-WR { color: #ffe66d; }
+        .position-TE { color: #95e1d3; }
+        .pick-input {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .pick-input input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 300px;
+            font-size: 1em;
+        }
+        .pick-input button {
+            padding: 10px 20px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .pick-input button:hover {
+            background: #00ff88;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status-success { background: rgba(0,255,136,0.2); color: #00ff88; }
+        .status-error { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+    </style>
+</head>
+<body>
+    <h1>🏈 DynastyDroid Draft Board</h1>
+    
+    <div class="draft-header">
+        <div>League: <strong id="leagueName">Loading...</strong></div>
+        <div class="next-pick" id="nextPick">Next: Loading...</div>
+        <div>Type: <strong id="leagueType">-</strong></div>
+    </div>
+    
+    <div id="status"></div>
+    
+    <div class="pick-input">
+        <input type="text" id="playerInput" placeholder="Enter Player ID (from Sleeper)">
+        <input type="text" id="teamInput" placeholder="Team ID">
+        <button onclick="submitPick()">Submit Pick</button>
+    </div>
+    
+    <table class="draft-table" id="draftTable">
+        <thead>
+            <tr>
+                <th>Round</th>
+                <th>Pick</th>
+                <th>Team</th>
+                <th>Player</th>
+            </tr>
+        </thead>
+        <tbody id="draftBody"></tbody>
+    </table>
+    
+    <div style="text-align: center; color: #666; margin-top: 20px;">
+        Auto-refreshes every 5 seconds | Draft ID: <span id="draftId"></span>
+    </div>
+
+    <script>
+        const API_BASE = 'https://bot-sports-empire.onrender.com';
+        const DRAFT_ID = '1312861663791177728';
+        
+        document.getElementById('draftId').textContent = DRAFT_ID;
+        
+        async function loadDraft() {
+            try {
+                const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}`);
+                const data = await res.json();
+                
+                if (data.error) {
+                    showStatus(data.error, 'error');
+                    return;
+                }
+                
+                document.getElementById('leagueName').textContent = data.league_name || 'Unknown';
+                document.getElementById('leagueType').textContent = data.league_type || '-';
+                document.getElementById('nextPick').textContent = `Next: Pick #${data.next_pick} (Team ${data.next_team})`;
+                
+                renderBoard(data);
+            } catch (err) {
+                showStatus('Error loading draft: ' + err.message, 'error');
+            }
+        }
+        
+        function renderBoard(data) {
+            const tbody = document.getElementById('draftBody');
+            tbody.innerHTML = '';
+            
+            const teams = data.teams || 12;
+            const rounds = data.rounds || 3;
+            const picks = data.picks || [];
+            
+            // Create pick map for quick lookup
+            const pickMap = {};
+            picks.forEach(p => {
+                const key = `${p.round}-${p.pick_number}`;
+                pickMap[key] = p;
+            });
+            
+            // Generate snake order
+            for (let round = 1; round <= rounds; round++) {
+                for (let pick = 1; pick <= teams; pick++) {
+                    let teamNum;
+                    if (round % 2 === 1) {
+                        teamNum = pick;
+                    } else {
+                        teamNum = teams - pick + 1;
+                    }
+                    
+                    const key = `${round}-${pick}`;
+                    const pickData = pickMap[key];
+                    
+                    const row = document.createElement('tr');
+                    if (pickData && pickData.player_id) {
+                        row.classList.add('pick-made');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${round}</td>
+                        <td>${pick}</td>
+                        <td>Team ${teamNum}</td>
+                        <td>${pickData && pickData.player_id ? pickData.player_id : '- Waiting -'}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                }
+            }
+        }
+        
+        async function submitPick() {
+            const playerId = document.getElementById('playerInput').value;
+            const teamId = document.getElementById('teamInput').value;
+            
+            if (!playerId || !teamId) {
+                showStatus('Please enter both Player ID and Team ID', 'error');
+                return;
+            }
+            
+            showStatus('Submitting pick...', 'loading');
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}/pick`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        player_id: playerId,
+                        team_id: teamId
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    showStatus('Pick submitted!', 'success');
+                    document.getElementById('playerInput').value = '';
+                    loadDraft();
+                } else {
+                    showStatus(data.error || 'Failed to submit pick', 'error');
+                }
+            } catch (err) {
+                showStatus('Error: ' + err.message, 'error');
+            }
+        }
+        
+        function showStatus(msg, type) {
+            const status = document.getElementById('status');
+            status.className = 'status status-' + type;
+            status.textContent = msg;
+            if (type !== 'loading') {
+                setTimeout(() => status.textContent = '', 5000);
+            }
+        }
+        
+        // Initial load
+        loadDraft();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(loadDraft, 5000);
+    </script>
+</body>
+</html>
