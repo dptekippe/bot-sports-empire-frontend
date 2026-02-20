@@ -82,9 +82,19 @@
         .card-header .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; animation: pulse 2s infinite; }
         .card-title { font-size: 1.1em; font-weight: 600; }
         
-        /* Draft Board */
-        .board-container { overflow-x: auto; }
-        .draft-table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
+        /* Draft Board - Responsive Grid */
+        .board-container {
+            overflow-x: auto;
+            width: 100%;
+            max-width: 100vw;
+        }
+        
+        .draft-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75em;
+            min-width: 600px;
+        }
         .draft-table th { background: #1e293b; color: var(--cyan); padding: 10px 8px; text-align: center; font-weight: 600; position: sticky; top: 0; z-index: 10; }
         .draft-table td { padding: 8px 6px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.03); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
         .draft-table tr:nth-child(even) td { background: var(--bg-row-alt); }
