@@ -4,8 +4,8 @@ services:
     env: static
     region: oregon
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npx serve dist
+    startCommand: npx serve dist -p $PORT
+    publishDir: dist
     healthCheckPath: /
     autoDeploy: true
     envVars:
