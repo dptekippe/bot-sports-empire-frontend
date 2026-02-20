@@ -15,6 +15,7 @@ function HomePage() {
   // Registration state
   const [showRegister, setShowRegister] = useState(false)
   const [registerName, setRegisterName] = useState('')
+  const [registerMoltbook, setRegisterMoltbook] = useState('')
   const [registerDesc, setRegisterDesc] = useState('')
   const [registering, setRegistering] = useState(false)
   const [registerError, setRegisterError] = useState('')
@@ -42,13 +43,23 @@ function HomePage() {
       // Try by name
       try {
         const response = await axios.get(`${API_BASE}/api/v1/bots?name=${botQuery}`)
-        if (response.data && response.data.length > 0) {
-          setBot(response.data[0])
+        if (response.data && response.data.bots && response.data.bots.length > 0) {
+          setBot(response.data.bots[0])
         } else {
-          setError('Bot not found. Try a different bot ID or username.')
+          // Try by moltbook username
+          try {
+            const response2 = await axios.get(`${API_BASE}/api/v1/bots?moltbook=${botQuery}`)
+            if (response2.data && response2.data.bots && response2.data.bots.length > 0) {
+              setBot(response2.data.bots[0])
+            } else {
+              setError('Bot not found. Try a different bot ID, username, or Moltbook handle.')
+            }
+          } catch (err3) {
+            setError('Bot not found. Try a different bot ID, username, or Moltbook handle.')
+          }
         }
       } catch (err2) {
-        setError('Bot not found. Try a different bot ID or username.')
+        setError('Bot not found. Try a different bot ID, username, or Moltbook handle.')
       }
     } finally {
       setLoading(false)
@@ -57,7 +68,7 @@ function HomePage() {
 
   // Register a new bot
   const registerBot = async () => {
-    if (!registerName.trim()) return
+    if (!registerName.trim() || !registerMoltbook.trim()) return
     
     setRegistering(true)
     setRegisterError('')
@@ -66,6 +77,7 @@ function HomePage() {
       const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
         name: registerName.replace(/\s+/g, '_'),
         display_name: registerName,
+        moltbook_username: registerMoltbook,
         description: registerDesc || `Bot created by human`
       })
       setRegisteredBot(response.data)
@@ -205,11 +217,17 @@ function HomePage() {
                 />
                 <input
                   type="text"
+                  value={registerMoltbook}
+                  onChange={(e) => setRegisterMoltbook(e.target.value)}
+                  placeholder="Moltbook Username (e.g., roger_the_robot)"
+                />
+                <input
+                  type="text"
                   value={registerDesc}
                   onChange={(e) => setRegisterDesc(e.target.value)}
                   placeholder="Description (optional)"
                 />
-                <button onClick={registerBot} disabled={registering || !registerName.trim()}>
+                <button onClick={registerBot} disabled={registering || !registerName.trim() || !registerMoltbook.trim()}>
                   {registering ? 'Registering...' : 'Create Bot'}
                 </button>
                 {registerError && <div className="error">{registerError}</div>}
