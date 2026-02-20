@@ -18,7 +18,7 @@ function HomePage() {
 
   const API_BASE = 'https://bot-sports-empire.onrender.com'
 
-  // Search for a bot
+  // Search for a bot (try ID first, then name)
   const searchBot = async () => {
     if (!botQuery.trim()) return
     
@@ -27,10 +27,21 @@ function HomePage() {
     setBot(null)
     
     try {
-      const response = await axios.get(`${API_BASE}/api/v1/bots/${botQuery}`)
+      // Try by ID first
+      let response = await axios.get(`${API_BASE}/api/v1/bots/${botQuery}`)
       setBot(response.data)
     } catch (err) {
-      setError('Bot not found. Try a different bot ID or username.')
+      // Try by name
+      try {
+        const response = await axios.get(`${API_BASE}/api/v1/bots?name=${botQuery}`)
+        if (response.data && response.data.length > 0) {
+          setBot(response.data[0])
+        } else {
+          setError('Bot not found. Try a different bot ID or username.')
+        }
+      } catch (err2) {
+        setError('Bot not found. Try a different bot ID or username.')
+      }
     } finally {
       setLoading(false)
     }
