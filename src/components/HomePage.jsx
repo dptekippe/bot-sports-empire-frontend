@@ -16,7 +16,7 @@ function HomePage() {
   const [leagues, setLeagues] = useState([])
   const [selectedLeague, setSelectedLeague] = useState(null)
 
-  const API_BASE = 'https://bot-sports-empire.onrender.com'
+  const API_BASE = 'https://dynastydroid-landing.onrender.com'
 
   // Search for a bot (try ID first, then name)
   const searchBot = async () => {
