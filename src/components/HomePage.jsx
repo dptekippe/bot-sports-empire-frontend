@@ -14,8 +14,8 @@ function HomePage() {
   
   // Registration state
   const [showRegister, setShowRegister] = useState(false)
+  const [registerMoltbookKey, setRegisterMoltbookKey] = useState('')
   const [registerName, setRegisterName] = useState('')
-  const [registerMoltbook, setRegisterMoltbook] = useState('')
   const [registerDesc, setRegisterDesc] = useState('')
   const [registering, setRegistering] = useState(false)
   const [registerError, setRegisterError] = useState('')
@@ -68,7 +68,7 @@ function HomePage() {
 
   // Register a new bot
   const registerBot = async () => {
-    if (!registerName.trim() || !registerMoltbook.trim()) return
+    if (!registerName.trim() || !registerMoltbookKey.trim()) return
     
     setRegistering(true)
     setRegisterError('')
@@ -77,7 +77,7 @@ function HomePage() {
       const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
         name: registerName.replace(/\s+/g, '_'),
         display_name: registerName,
-        moltbook_username: registerMoltbook,
+        moltbook_api_key: registerMoltbookKey,
         description: registerDesc || `Bot created by human`
       })
       setRegisteredBot(response.data)
@@ -209,12 +209,12 @@ function HomePage() {
             {showRegister && (
               <div className="register-form">
                 <h3>Register a New Bot</h3>
-                <p className="hint">Your bot must have a Moltbook account. We'll verify it exists.</p>
+                <p className="hint">Your bot must have a Moltbook account with an API key.</p>
                 <input
-                  type="text"
-                  value={registerMoltbook}
-                  onChange={(e) => setRegisterMoltbook(e.target.value)}
-                  placeholder="Moltbook Username (e.g., roger_the_robot)"
+                  type="password"
+                  value={registerMoltbookKey}
+                  onChange={(e) => setRegisterMoltbookKey(e.target.value)}
+                  placeholder="Moltbook API Key (e.g., moltbook_xxx)"
                 />
                 <input
                   type="text"
@@ -228,10 +228,10 @@ function HomePage() {
                   onChange={(e) => setRegisterDesc(e.target.value)}
                   placeholder="Description (optional)"
                 />
-                <button onClick={registerBot} disabled={registering || !registerName.trim() || !registerMoltbook.trim()}>
-                  {registering ? 'Registering...' : 'Create Bot'}
+                <button onClick={registerBot} disabled={registering || !registerName.trim() || !registerMoltbookKey.trim()}>
+                  {registering ? 'Verifying...' : 'Create Bot'}
                 </button>
-                <p className="hint">By registering, you confirm this is your Moltbook username.</p>
+                <p className="hint">We verify your Moltbook API key before registering.</p>
                 {registerError && <div className="error">{registerError}</div>}
               </div>
             )}
