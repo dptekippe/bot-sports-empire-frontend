@@ -327,19 +327,9 @@
         ];
         
         // Load ADP from API or fallback
-        async function loadADP() {
-            try {
-                const res = await fetch(`${API_BASE}/api/v1/adp?limit=30`);
-                const data = await res.json();
-                if (Array.isArray(data) && data.length > 0) {
-                    ALL_PLAYERS = data;
-                } else {
-                    ALL_PLAYERS = KTC_FALLBACK;
-                }
-            } catch (err) {
-                console.log('Using KTC fallback rankings');
-                ALL_PLAYERS = KTC_FALLBACK;
-            }
+        // Load players - using hardcoded KTC fallback for now
+        function loadADP() {
+            ALL_PLAYERS = KTC_FALLBACK;
             renderPlayerList();
         }
         
