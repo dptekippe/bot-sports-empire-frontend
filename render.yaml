@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bot-sports-frontend
+    name: bot-sports-empire-frontend
     env: static
     region: oregon
     plan: free
@@ -10,4 +10,4 @@ services:
     autoDeploy: true
     envVars:
       - key: NODE_VERSION
-        value: 18.17.0
+        value: "18.17.0"
