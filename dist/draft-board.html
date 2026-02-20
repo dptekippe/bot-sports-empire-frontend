@@ -3,49 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DynastyDroid Draft Board</title>
+    <title>Primetime Draft Board - DynastyDroid</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tah Verdana, sansoma, Geneva,-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #fff;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
+            overflow-x: auto;
         }
-        h1 { text-align: center; color: #00d4ff; }
+        h1 { 
+            text-align: center; 
+            color: #00d4ff; 
+            font-size: 1.5em;
+        }
         .draft-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
             background: rgba(255,255,255,0.1);
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
         }
         .next-pick {
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: #00ff88;
             font-weight: bold;
         }
         .draft-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            font-size: 0.8em;
         }
         .draft-table th, .draft-table td {
-            padding: 10px;
+            border: 1px solid #444;
+            padding: 6px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            min-width: 100px;
+            max-width: 150px;
         }
         .draft-table th {
-            background: rgba(0,212,255,0.2);
+            background: rgba(0,212,255,0.3);
             color: #00d4ff;
         }
-        .draft-table tr:nth-child(even) {
+        .draft-table td.empty {
             background: rgba(255,255,255,0.05);
+            color: #666;
         }
-        .pick-made {
-            background: rgba(0,255,136,0.2) !important;
+        .draft-table td.pick {
+            background: rgba(0,255,136,0.1);
+        }
+        .draft-table td.next-pick {
+            background: #00ff88 !important;
+            color: #000 !important;
+            font-weight: bold;
+            animation: glow 1s infinite;
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px #00ff88; }
+            50% { box-shadow: 0 0 20px #00ff88; }
         }
         .position-QB { color: #ff6b6b; }
         .position-RB { color: #4ecdc4; }
@@ -55,17 +74,17 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin: 20px 0;
+            margin: 10px 0;
+            flex-wrap: wrap;
         }
         .pick-input input {
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
             border: none;
-            width: 300px;
-            font-size: 1em;
+            width: 200px;
         }
         .pick-input button {
-            padding: 10px 20px;
+            padding: 8px 16px;
             background: #00d4ff;
             color: #000;
             border: none;
@@ -73,17 +92,20 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .pick-input button:hover {
-            background: #00ff88;
-        }
         .status {
             text-align: center;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
             margin: 10px 0;
         }
         .status-success { background: rgba(0,255,136,0.2); color: #00ff88; }
         .status-error { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -91,37 +113,32 @@
     
     <div class="draft-header">
         <div>League: <strong id="leagueName">Loading...</strong></div>
-        <div class="next-pick" id="nextPick">Next: Loading...</div>
+        <div class="next-pick" id="nextPick">Next: -</div>
         <div>Type: <strong id="leagueType">-</strong></div>
     </div>
     
     <div id="status"></div>
     
     <div class="pick-input">
-        <input type="text" id="playerInput" placeholder="Enter Player ID (from Sleeper)">
-        <input type="text" id="teamInput" placeholder="Team ID">
+        <input type="text" id="playerInput" placeholder="Player ID (from Sleeper)">
+        <input type="text" id="teamInput" placeholder="Team # (1-12)">
         <button onclick="submitPick()">Submit Pick</button>
     </div>
     
     <table class="draft-table" id="draftTable">
-        <thead>
-            <tr>
-                <th>Round</th>
-                <th>Pick</th>
-                <th>Team</th>
-                <th>Player</th>
-            </tr>
-        </thead>
+        <thead id="draftHead"></thead>
         <tbody id="draftBody"></tbody>
     </table>
     
-    <div style="text-align: center; color: #666; margin-top: 20px;">
+    <div class="footer">
         Auto-refreshes every 5 seconds | Draft ID: <span id="draftId"></span>
     </div>
 
     <script>
         const API_BASE = 'https://bot-sports-empire.onrender.com';
         const DRAFT_ID = '1312861663791177728';
+        const TEAMS = 12;
+        const ROUNDS = 28;
         
         document.getElementById('draftId').textContent = DRAFT_ID;
         
@@ -141,53 +158,58 @@
                 
                 renderBoard(data);
             } catch (err) {
-                showStatus('Error loading draft: ' + err.message, 'error');
+                showStatus('Error: ' + err.message, 'error');
             }
         }
         
         function renderBoard(data) {
+            const thead = document.getElementById('draftHead');
             const tbody = document.getElementById('draftBody');
-            tbody.innerHTML = '';
             
-            const teams = data.teams || 12;
-            const rounds = data.rounds || 3;
+            // Header row: Round + Team 1-12
+            let headerHTML = '<tr><th>Round</th>';
+            for (let t = 1; t <= TEAMS; t++) {
+                headerHTML += `<th>Team ${t}</th>`;
+            }
+            headerHTML += '</tr>';
+            thead.innerHTML = headerHTML;
+            
+            // Create pick map
             const picks = data.picks || [];
-            
-            // Create pick map for quick lookup
             const pickMap = {};
             picks.forEach(p => {
-                const key = `${p.round}-${p.pick_number}`;
+                const key = `${p.round}-${p.roster_id}`;
                 pickMap[key] = p;
             });
             
-            // Generate snake order
-            for (let round = 1; round <= rounds; round++) {
-                for (let pick = 1; pick <= teams; pick++) {
-                    let teamNum;
+            // Build 28 rows
+            let bodyHTML = '';
+            for (let round = 1; round <= ROUNDS; round++) {
+                bodyHTML += `<tr><td><strong>R${round}</strong></td>`;
+                
+                for (let team = 1; team <= TEAMS; team++) {
+                    // Calculate draft slot for snake order
+                    let draftSlot;
                     if (round % 2 === 1) {
-                        teamNum = pick;
+                        draftSlot = team;
                     } else {
-                        teamNum = teams - pick + 1;
+                        draftSlot = TEAMS - team + 1;
                     }
                     
-                    const key = `${round}-${pick}`;
-                    const pickData = pickMap[key];
+                    const key = `${round}-${draftSlot}`;
+                    const pick = pickMap[key];
                     
-                    const row = document.createElement('tr');
-                    if (pickData && pickData.player_id) {
-                        row.classList.add('pick-made');
+                    if (pick && pick.player_id) {
+                        bodyHTML += `<td class="pick" title="Pick: ${pick.player_id}">${pick.player_id}</td>`;
+                    } else if (round === Math.ceil(data.next_pick / TEAMS) && draftSlot === data.next_team) {
+                        bodyHTML += `<td class="next-pick">ON DECK</td>`;
+                    } else {
+                        bodyHTML += `<td class="empty">-</td>`;
                     }
-                    
-                    row.innerHTML = `
-                        <td>${round}</td>
-                        <td>${pick}</td>
-                        <td>Team ${teamNum}</td>
-                        <td>${pickData && pickData.player_id ? pickData.player_id : '- Waiting -'}</td>
-                    `;
-                    
-                    tbody.appendChild(row);
                 }
+                bodyHTML += '</tr>';
             }
+            tbody.innerHTML = bodyHTML;
         }
         
         async function submitPick() {
@@ -195,30 +217,23 @@
             const teamId = document.getElementById('teamInput').value;
             
             if (!playerId || !teamId) {
-                showStatus('Please enter both Player ID and Team ID', 'error');
+                showStatus('Enter Player ID and Team #', 'error');
                 return;
             }
-            
-            showStatus('Submitting pick...', 'loading');
             
             try {
                 const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}/pick`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        player_id: playerId,
-                        team_id: teamId
-                    })
+                    body: JSON.stringify({player_id: playerId, team_id: teamId})
                 });
-                
                 const data = await res.json();
                 
                 if (data.success) {
-                    showStatus('Pick submitted!', 'success');
-                    document.getElementById('playerInput').value = '';
+                    showStatus('Pick recorded!', 'success');
                     loadDraft();
                 } else {
-                    showStatus(data.error || 'Failed to submit pick', 'error');
+                    showStatus(data.error || 'Failed', 'error');
                 }
             } catch (err) {
                 showStatus('Error: ' + err.message, 'error');
@@ -230,14 +245,11 @@
             status.className = 'status status-' + type;
             status.textContent = msg;
             if (type !== 'loading') {
-                setTimeout(() => status.textContent = '', 5000);
+                setTimeout(() => status.textContent = '', 3000);
             }
         }
         
-        // Initial load
         loadDraft();
-        
-        // Auto-refresh every 5 seconds
         setInterval(loadDraft, 5000);
     </script>
 </body>
