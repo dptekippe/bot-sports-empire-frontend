@@ -479,7 +479,7 @@
         
         async function loadDraft() {
             try {
-                const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}`);
+                const res = await fetch(`${API_BASE}/api/v1/drafts/${DRAFT_ID}`);
                 const data = await res.json();
                 
                 if (data.error) { showStatus(data.error, 'error'); return; }
@@ -549,7 +549,7 @@
             if (!selectedPlayerId) return;
             
             try {
-                const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}/pick`, {
+                const res = await fetch(`${API_BASE}/api/v1/drafts/${DRAFT_ID}/pick`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({player_id: selectedPlayerId, team_id: '1'})
