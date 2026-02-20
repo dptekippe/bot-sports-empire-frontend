@@ -14,6 +14,8 @@
             --cyan: #00D1FF;
             --lime: #4CFF8F;
             --red: #FF3B6B;
+            --purple: #a855f7;
+            --pink: #ec4899;
             --text-primary: #F5F7FA;
             --text-secondary: #A0AEC0;
             --border: #1e293b;
@@ -47,37 +49,23 @@
         .league-name { font-size: 1.3em; font-weight: 700; color: var(--cyan); }
         .next-pick { font-size: 1.2em; font-weight: 600; color: var(--lime); }
         
-        .progress-container {
-            flex: 1;
-            min-width: 200px;
-            max-width: 400px;
-        }
-        .progress-bar {
-            height: 8px;
-            background: #1e293b;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--cyan), var(--lime));
-            transition: width 0.5s ease;
-        }
-        .progress-text {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-top: 5px;
-        }
+        .progress-container { flex: 1; min-width: 200px; max-width: 400px; }
+        .progress-bar { height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--lime)); transition: width 0.5s ease; }
+        .progress-text { font-size: 0.8em; color: var(--text-secondary); text-align: center; margin-top: 5px; }
         
-        /* Main Grid */
+        /* Main Grid - 3 Columns */
         .main-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr;
             gap: 20px;
         }
         
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
+            .main-grid { grid-template-columns: 1fr 1fr; }
+            .chat-panel { grid-column: 1 / -1; }
+        }
+        @media (max-width: 768px) {
             .main-grid { grid-template-columns: 1fr; }
         }
         
@@ -90,214 +78,102 @@
             padding: 20px;
         }
         
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .card-header .dot {
-            width: 10px;
-            height: 10px;
-            background: var(--lime);
-            border-radius: 50%;
-            margin-right: 10px;
-            animation: pulse 2s infinite;
-        }
-        .card-title {
-            font-size: 1.1em;
-            font-weight: 600;
-        }
+        .card-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .card-header .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; animation: pulse 2s infinite; }
+        .card-title { font-size: 1.1em; font-weight: 600; }
         
         /* Draft Board */
-        .board-container {
-            overflow-x: auto;
-        }
-        
-        .draft-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75em;
-        }
-        
-        .draft-table th {
-            background: #1e293b;
-            color: var(--cyan);
-            padding: 10px 8px;
-            text-align: center;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .draft-table td {
-            padding: 8px 6px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
-        }
-        
+        .board-container { overflow-x: auto; }
+        .draft-table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
+        .draft-table th { background: #1e293b; color: var(--cyan); padding: 10px 8px; text-align: center; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        .draft-table td { padding: 8px 6px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.03); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
         .draft-table tr:nth-child(even) td { background: var(--bg-row-alt); }
         .draft-table tr:hover td { background: rgba(0, 209, 255, 0.05); }
-        
         .draft-table td.current-round { background: rgba(0, 209, 255, 0.08); }
-        
         .draft-table td.empty { color: #3a4a5a; }
+        .draft-table td.next-pick { background: linear-gradient(135deg, var(--cyan), var(--lime)) !important; color: #000 !important; font-weight: 700; box-shadow: 0 0 20px rgba(0, 209, 255, 0.5); }
         
-        .draft-table td.next-pick {
-            background: linear-gradient(135deg, var(--cyan), var(--lime)) !important;
-            color: #000 !important;
-            font-weight: 700;
-            box-shadow: 0 0 20px rgba(0, 209, 255, 0.5);
+        /* Chat Panel */
+        .chat-panel .dot { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+        
+        .chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
         }
+        
+        .chat-msg {
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            line-height: 1.4;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .chat-msg.commish { background: rgba(0, 209, 255, 0.15); border-left: 3px solid var(--cyan); }
+        .chat-msg.analyst { background: rgba(76, 255, 143, 0.15); border-left: 3px solid var(--lime); }
+        .chat-msg.trash { background: rgba(236, 72, 153, 0.15); border-left: 3px solid var(--pink); }
+        .chat-msg.system { background: rgba(168, 85, 247, 0.15); border-left: 3px solid var(--purple); }
+        
+        .bot-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+        
+        .bot-dots { display: flex; gap: 4px; }
+        .bot-dots span { width: 6px; height: 6px; border-radius: 50%; animation: pulse 1.5s infinite; }
+        .bot-dots span:nth-child(1) { background: var(--cyan); }
+        .bot-dots span:nth-child(2) { background: var(--lime); animation-delay: 0.2s; }
+        .bot-dots span:nth-child(3) { background: var(--pink); animation-delay: 0.4s; }
         
         /* Position Filters */
-        .filters {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-chip {
-            padding: 6px 14px;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
+        .filters { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .filter-chip { padding: 6px 14px; background: rgba(30, 41, 59, 0.8); border: 1px solid var(--border); border-radius: 20px; font-size: 0.75em; font-weight: 500; cursor: pointer; transition: all 0.2s; }
         .filter-chip:hover { background: rgba(0, 209, 255, 0.1); }
-        
-        .filter-chip.active {
-            background: var(--cyan);
-            color: #000;
-            border-color: var(--cyan);
-        }
-        
+        .filter-chip.active { background: var(--cyan); color: #000; border-color: var(--cyan); }
         .filter-chip[data-pos="QB"].active { background: #ff6b6b; }
         .filter-chip[data-pos="RB"].active { background: #4CFF8F; }
         .filter-chip[data-pos="WR"].active { background: #00D1FF; }
         .filter-chip[data-pos="TE"].active { background: #ff8c00; }
         
         /* Player List */
-        .player-list {
-            max-height: 50vh;
-            overflow-y: auto;
-        }
-        
-        .player-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 4px;
-        }
-        
+        .player-list { max-height: 35vh; overflow-y: auto; }
+        .player-item { display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-bottom: 4px; }
         .player-item:nth-child(even) { background: rgba(255,255,255,0.02); }
-        
-        .player-item:hover {
-            background: rgba(0, 209, 255, 0.1);
-            transform: translateX(3px);
-        }
-        
-        .player-item.selected {
-            background: linear-gradient(135deg, var(--cyan), var(--lime));
-            box-shadow: 0 0 20px rgba(0, 209, 255, 0.3);
-        }
-        
-        .player-item .name {
-            flex: 1;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .player-item .pos-tag {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7em;
-            font-weight: 600;
-            margin-right: 8px;
-        }
-        
+        .player-item:hover { background: rgba(0, 209, 255, 0.1); transform: translateX(3px); }
+        .player-item.selected { background: linear-gradient(135deg, var(--cyan), var(--lime)); box-shadow: 0 0 20px rgba(0, 209, 255, 0.3); }
+        .player-item .name { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .player-item .pos-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.7em; font-weight: 600; margin-right: 8px; }
         .player-item .pos-QB { background: rgba(255,107,107,0.3); color: #ff6b6b; }
         .player-item .pos-RB { background: rgba(76,255,143,0.3); color: #4CFF8F; }
         .player-item .pos-WR { background: rgba(0,209,255,0.3); color: #00D1FF; }
         .player-item .pos-TE { background: rgba(255,140,0,0.3); color: #ff8c00; }
-        
-        .player-item .adp {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            min-width: 30px;
-            text-align: right;
-        }
+        .player-item .adp { font-size: 0.8em; color: var(--text-secondary); min-width: 30px; text-align: right; }
         
         /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        
-        .btn-queue {
-            background: linear-gradient(135deg, var(--cyan), var(--lime));
-            color: #000;
-        }
-        
-        .btn-queue:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 209, 255, 0.4);
-        }
-        
-        .queued-info {
-            text-align: center;
-            padding: 12px;
-            background: rgba(76, 255, 143, 0.1);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            color: var(--lime);
-        }
-        
-        .status {
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 600; font-size: 1em; cursor: pointer; transition: all 0.2s; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-queue { background: linear-gradient(135deg, var(--cyan), var(--lime)); color: #000; }
+        .btn-queue:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 209, 255, 0.4); }
+        .queued-info { text-align: center; padding: 12px; background: rgba(76, 255, 143, 0.1); border-radius: 8px; margin-bottom: 10px; color: var(--lime); }
+        .status { text-align: center; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.9em; }
         .status-success { background: rgba(76, 255, 143, 0.1); color: var(--lime); }
         .status-error { background: rgba(255, 59, 107, 0.1); color: var(--red); }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        @keyframes flash {
-            0% { background: #fff; }
-            100% { background: transparent; }
-        }
-        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes flash { 0% { background: #fff; } 100% { background: transparent; } }
         .flash { animation: flash 0.5s ease; }
     </style>
 </head>
@@ -306,9 +182,7 @@
         <div class="league-name" id="leagueName">Loading...</div>
         <div class="next-pick" id="nextPick">Next: -</div>
         <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
             <div class="progress-text" id="progressText">0/336 picks</div>
         </div>
     </div>
@@ -316,10 +190,7 @@
     <div class="main-grid">
         <!-- Draft Board -->
         <div class="card">
-            <div class="card-header">
-                <div class="dot"></div>
-                <div class="card-title">Draft Board</div>
-            </div>
+            <div class="card-header"><div class="dot" style="background:var(--lime)"></div><div class="card-title">Draft Board</div></div>
             <div class="board-container">
                 <table class="draft-table">
                     <thead id="draftHead"></thead>
@@ -330,11 +201,7 @@
         
         <!-- Player Panel -->
         <div class="card">
-            <div class="card-header">
-                <div class="dot"></div>
-                <div class="card-title">Available Players</div>
-            </div>
-            
+            <div class="card-header"><div class="dot" style="background:var(--lime)"></div><div class="card-title">Available Players</div></div>
             <div class="filters">
                 <button class="filter-chip active" data-pos="ALL">ALL</button>
                 <button class="filter-chip" data-pos="QB">QB</button>
@@ -342,18 +209,22 @@
                 <button class="filter-chip" data-pos="WR">WR</button>
                 <button class="filter-chip" data-pos="TE">TE</button>
             </div>
-            
             <div class="player-list" id="playerList"></div>
-            
-            <div class="queued-info" id="queuedInfo" style="display:none;">
-                Selected: <strong id="queuedName"></strong>
-            </div>
-            
-            <button class="btn btn-queue" id="queueBtn" onclick="submitPick()" disabled>
-                Submit Pick
-            </button>
-            
+            <div class="queued-info" id="queuedInfo" style="display:none;">Selected: <strong id="queuedName"></strong></div>
+            <button class="btn btn-queue" id="queueBtn" onclick="submitPick()" disabled>Submit Pick</button>
             <div class="status" id="status"></div>
+        </div>
+        
+        <!-- AI Chat Arena -->
+        <div class="card chat-panel">
+            <div class="card-header"><div class="dot"></div><div class="card-title">🤖 Draft Chat Arena</div></div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg system">👋 Welcome to Draft Chat Arena! Pick a player to get AI commentary...</div>
+            </div>
+            <div class="bot-status">
+                <span>Live AI Commentary</span>
+                <div class="bot-dots"><span></span><span></span><span></span></div>
+            </div>
         </div>
     </div>
 
@@ -367,8 +238,16 @@
         let selectedPlayerId = null;
         let selectedPlayerName = null;
         let currentFilter = 'ALL';
+        let lastPickCount = 0;
         
-        // FantasyPros-style rankings (updated)
+        // Bot personas
+        const bots = {
+            commish: { name: 'COMMISH', color: '#00D1FF', emoji: '👑' },
+            analyst: { name: 'ANALYST', color: '#4CFF8F', emoji: '📊' },
+            trash: { name: 'TRASHTALKER', color: '#ec4899', emoji: '😈' }
+        };
+        
+        // Player data
         const ALL_PLAYERS = [
             {id:'1', name:'Bijan Robinson', pos:'RB', adp:1.1, team:'ATL'},
             {id:'2', name:'Jahmyr Gibbs', pos:'RB', adp:2.2, team:'DET'},
@@ -402,17 +281,52 @@
             {id:'30', name:'Christian Kirk', pos:'WR', adp:30.3, team:'JAC'},
         ];
         
-        function renderPlayerList() {
-            const players = currentFilter === 'ALL' 
-                ? ALL_PLAYERS 
-                : ALL_PLAYERS.filter(p => p.pos === currentFilter);
+        // Bot reactions
+        const botReactions = [
+            (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Solid value! ${p.player} at ADP ${p.adp} is a nice pickup.`,
+            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.player} projects well. Solid depth addition here.`,
+            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Team ${p.team} playing it SAFE with ${p.player}! 😂`,
+            (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Round ${p.round} heating up! ${28 - p.round} rounds to go... ⏱️`,
+            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.pos} premium holding strong. ${p.pos} run might be coming!`,
+            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Another ${p.pos}? Someone's loading up for a run! 🏃`,
+            (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Smart dynasty move. ${p.player} has long-term value! 💎`,
+            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> Bye week ${p.bye || 10} - solid schedule management.`,
+            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Is this a STEAL or a REACH? You decide! 🤨`,
+        ];
+        
+        function addChatMessage(msg, type = 'system') {
+            const chat = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `chat-msg ${type}`;
+            div.innerHTML = msg;
+            chat.insertBefore(div, chat.firstChild);
+            // Keep only last 10 messages
+            while (chat.children.length > 10) chat.removeChild(chat.lastChild);
+        }
+        
+        function generateBotReaction(pick, round) {
+            const player = ALL_PLAYERS.find(p => p.id === pick.player_id) || { pos: 'WR', bye: 10 };
+            const reaction = botReactions[Math.floor(Math.random() * botReactions.length)];
+            const types = ['commish', 'analyst', 'trash'];
+            const type = types[Math.floor(Math.random() * types.length)];
             
+            const pickData = {
+                player: selectedPlayerName || 'Unknown',
+                adp: player.adp || 99,
+                team: '3',
+                round: round,
+                pos: player.pos,
+                bye: player.bye || 10
+            };
+            
+            addChatMessage(reaction(pickData), type);
+        }
+        
+        function renderPlayerList() {
+            const players = currentFilter === 'ALL' ? ALL_PLAYERS : ALL_PLAYERS.filter(p => p.pos === currentFilter);
             const list = document.getElementById('playerList');
             list.innerHTML = players.map(p => `
-                <div class="player-item ${selectedPlayerId === p.id ? 'selected' : ''}" 
-                     data-id="${p.id}" 
-                     onclick="selectPlayer('${p.id}', '${p.name}')"
-                     title="${p.name} - ${p.team}">
+                <div class="player-item ${selectedPlayerId === p.id ? 'selected' : ''}" data-id="${p.id}" onclick="selectPlayer('${p.id}', '${p.name}')" title="${p.name} - ${p.team}">
                     <span class="pos-tag pos-${p.pos}">${p.pos}</span>
                     <span class="name">${p.name}</span>
                     <span class="adp">${p.adp}</span>
@@ -420,7 +334,6 @@
             `).join('');
         }
         
-        // Filter chips
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -437,6 +350,10 @@
             document.getElementById('queuedName').textContent = name;
             document.getElementById('queueBtn').disabled = false;
             renderPlayerList();
+            
+            // Bot reaction on select
+            const player = ALL_PLAYERS.find(p => p.id === id);
+            addChatMessage(`${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${name} - solid pick! ${player ? player.team : ''}`, 'analyst');
         }
         
         async function loadDraft() {
@@ -453,6 +370,12 @@
                 document.getElementById('progressFill').style.width = pct + '%';
                 document.getElementById('progressText').textContent = `${data.picks_made}/${data.total_picks} picks`;
                 
+                // Check for new pick
+                if (data.picks_made > lastPickCount && lastPickCount > 0) {
+                    generateBotReaction({player_id: selectedPlayerId}, Math.ceil(data.next_pick / TEAMS));
+                }
+                lastPickCount = data.picks_made;
+                
                 renderBoard(data);
             } catch (err) { showStatus('Error: ' + err.message, 'error'); }
         }
@@ -461,17 +384,14 @@
             const thead = document.getElementById('draftHead');
             const tbody = document.getElementById('draftBody');
             
-            // Header
             let headerHTML = '<tr><th>Rd</th>';
             for (let t = 1; t <= TEAMS; t++) headerHTML += `<th>T${t}</th>`;
             headerHTML += '</tr>';
             thead.innerHTML = headerHTML;
             
-            // Picks map
             const pickMap = {};
             (data.picks || []).forEach(p => { pickMap[`${p.round}-${p.roster_id}`] = p; });
             
-            // Dynamic window
             const currentRound = Math.ceil(data.next_pick / TEAMS);
             const startRound = Math.max(1, currentRound - Math.floor(VISIBLE_ROUNDS/2));
             const endRound = Math.min(TOTAL_ROUNDS, startRound + VISIBLE_ROUNDS - 1);
@@ -479,9 +399,7 @@
             let bodyHTML = '';
             for (let round = startRound; round <= endRound; round++) {
                 const isCurrent = round === currentRound;
-                if (isCurrent) bodyHTML += '<tr>';
-                else bodyHTML += '<tr>';
-                
+                bodyHTML += '<tr>';
                 bodyHTML += `<td style="font-weight:bold;${isCurrent ? 'color:var(--cyan);' : ''}">${round}</td>`;
                 
                 for (let team = 1; team <= TEAMS; team++) {
@@ -517,6 +435,7 @@
                 
                 if (data.success) {
                     showStatus(`Picked: ${selectedPlayerName}`, 'success');
+                    generateBotReaction({player_id: selectedPlayerId}, Math.ceil(lastPickCount / TEAMS));
                     selectedPlayerId = null;
                     selectedPlayerName = null;
                     document.getElementById('queuedInfo').style.display = 'none';
