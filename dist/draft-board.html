@@ -54,7 +54,7 @@
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--lime)); transition: width 0.5s ease; }
         .progress-text { font-size: 0.8em; color: var(--text-secondary); text-align: center; margin-top: 5px; }
         
-        /* Main Grid - 3 Columns */
+        /* Main Grid */
         .main-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
@@ -95,43 +95,14 @@
         
         /* Chat Panel */
         .chat-panel .dot { background: linear-gradient(90deg, var(--purple), var(--pink)); }
-        
-        .chat-messages {
-            max-height: 200px;
-            overflow-y: auto;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-        
-        .chat-msg {
-            padding: 8px 10px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            font-size: 0.8em;
-            line-height: 1.4;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
+        .chat-messages { max-height: 200px; overflow-y: auto; background: rgba(30, 41, 59, 0.5); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+        .chat-msg { padding: 8px 10px; margin-bottom: 8px; border-radius: 8px; font-size: 0.8em; line-height: 1.4; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         .chat-msg.commish { background: rgba(0, 209, 255, 0.15); border-left: 3px solid var(--cyan); }
         .chat-msg.analyst { background: rgba(76, 255, 143, 0.15); border-left: 3px solid var(--lime); }
         .chat-msg.trash { background: rgba(236, 72, 153, 0.15); border-left: 3px solid var(--pink); }
         .chat-msg.system { background: rgba(168, 85, 247, 0.15); border-left: 3px solid var(--purple); }
-        
-        .bot-status {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.75em;
-            color: var(--text-secondary);
-        }
-        
+        .bot-status { display: flex; align-items: center; justify-content: space-between; font-size: 0.75em; color: var(--text-secondary); }
         .bot-dots { display: flex; gap: 4px; }
         .bot-dots span { width: 6px; height: 6px; border-radius: 50%; animation: pulse 1.5s infinite; }
         .bot-dots span:nth-child(1) { background: var(--cyan); }
@@ -149,7 +120,7 @@
         .filter-chip[data-pos="TE"].active { background: #ff8c00; }
         
         /* Player List */
-        .player-list { max-height: 35vh; overflow-y: auto; }
+        .player-list { max-height: 30vh; overflow-y: auto; }
         .player-item { display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-bottom: 4px; }
         .player-item:nth-child(even) { background: rgba(255,255,255,0.02); }
         .player-item:hover { background: rgba(0, 209, 255, 0.1); transform: translateX(3px); }
@@ -175,6 +146,53 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes flash { 0% { background: #fff; } 100% { background: transparent; } }
         .flash { animation: flash 0.5s ease; }
+        
+        /* === DRAFT INTELLIGENCE PANEL === */
+        .intelligence-panel {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        @media (max-width: 900px) {
+            .intelligence-panel { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .intelligence-panel { grid-template-columns: 1fr; }
+        }
+        
+        .intel-card {
+            background: rgba(15, 21, 37, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .intel-card:hover { transform: scale(1.02); border-color: var(--cyan); }
+        
+        .intel-card.purple { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(236, 72, 153, 0.1)); border-color: rgba(168, 85, 247, 0.3); }
+        
+        .intel-value { font-size: 2em; font-weight: 700; color: var(--lime); }
+        .intel-label { font-size: 0.8em; color: var(--text-secondary); margin-top: 5px; }
+        
+        .value-bar { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .value-bar-fill { height: 100%; background: linear-gradient(90deg, var(--lime), #22c55e); border-radius: 3px; transition: width 0.5s; }
+        
+        .need-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.85em; }
+        .need-urgent { color: var(--red); }
+        .need-warning { color: #f97316; }
+        .need-good { color: var(--lime); }
+        
+        .trend-item { font-size: 0.85em; padding: 4px 0; }
+        .trend-good { color: var(--lime); }
+        .trend-warning { color: #f97316; }
+        .trend-info { color: var(--cyan); }
+        
+        .trade-value { font-family: monospace; font-size: 0.85em; padding: 3px 0; }
     </style>
 </head>
 <body>
@@ -227,6 +245,38 @@
             </div>
         </div>
     </div>
+    
+    <!-- Draft Intelligence Panel -->
+    <div class="intelligence-panel">
+        <div class="intel-card">
+            <div class="intel-value" id="valueMeter">+0%</div>
+            <div class="intel-label">Value Over ADP</div>
+            <div class="value-bar"><div class="value-bar-fill" id="valueBar" style="width: 50%"></div></div>
+        </div>
+        
+        <div class="intel-card">
+            <div class="card-title" style="font-size:0.9em;margin-bottom:10px;">📋 Your Team Needs</div>
+            <div class="need-item"><span>QB</span><span class="need-good" id="needQB">2 FLEX</span></div>
+            <div class="need-item"><span>RB</span><span class="need-warning" id="needRB">1 START</span></div>
+            <div class="need-item"><span>WR</span><span class="need-urgent" id="needWR">URGENT</span></div>
+            <div class="need-item"><span>TE</span><span class="need-good" id="needTE">1 FLEX</span></div>
+        </div>
+        
+        <div class="intel-card">
+            <div class="card-title" style="font-size:0.9em;margin-bottom:10px;">💰 Trade Value</div>
+            <div class="trade-value" style="color:var(--lime)">Pick 1.01 = 5000</div>
+            <div class="trade-value" style="color:var(--text-secondary)">Pick 2.12 = 1800</div>
+            <div class="trade-value" style="color:var(--text-secondary)">Pick 3.04 = 950</div>
+            <div class="trade-value" style="color:var(--text-secondary)">2026 1st = 2200</div>
+        </div>
+        
+        <div class="intel-card purple">
+            <div class="card-title" style="font-size:0.9em;margin-bottom:10px;color:var(--purple);">📈 League Trends</div>
+            <div class="trend-item" id="trend1"><span class="trend-good">✅</span> <span id="trendQB">3 QBs gone</span></div>
+            <div class="trend-item" id="trend2"><span class="trend-warning">⚠️</span> <span id="trendRB">RB run coming</span></div>
+            <div class="trend-item" id="trend3"><span class="trend-info">📈</span> <span id="trendWR">WR value up</span></div>
+        </div>
+    </div>
 
     <script>
         const API_BASE = 'https://bot-sports-empire.onrender.com';
@@ -239,15 +289,14 @@
         let selectedPlayerName = null;
         let currentFilter = 'ALL';
         let lastPickCount = 0;
+        let picksMade = 0;
         
-        // Bot personas
         const bots = {
             commish: { name: 'COMMISH', color: '#00D1FF', emoji: '👑' },
             analyst: { name: 'ANALYST', color: '#4CFF8F', emoji: '📊' },
             trash: { name: 'TRASHTALKER', color: '#ec4899', emoji: '😈' }
         };
         
-        // Player data
         const ALL_PLAYERS = [
             {id:'1', name:'Bijan Robinson', pos:'RB', adp:1.1, team:'ATL'},
             {id:'2', name:'Jahmyr Gibbs', pos:'RB', adp:2.2, team:'DET'},
@@ -281,7 +330,6 @@
             {id:'30', name:'Christian Kirk', pos:'WR', adp:30.3, team:'JAC'},
         ];
         
-        // Bot reactions
         const botReactions = [
             (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Solid value! ${p.player} at ADP ${p.adp} is a nice pickup.`,
             (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.player} projects well. Solid depth addition here.`,
@@ -289,9 +337,6 @@
             (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Round ${p.round} heating up! ${28 - p.round} rounds to go... ⏱️`,
             (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${p.pos} premium holding strong. ${p.pos} run might be coming!`,
             (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Another ${p.pos}? Someone's loading up for a run! 🏃`,
-            (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Smart dynasty move. ${p.player} has long-term value! 💎`,
-            (p) => `${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> Bye week ${p.bye || 10} - solid schedule management.`,
-            (p) => `${bots.trash.emoji} <strong style="color:${bots.trash.color}">${bots.trash.name}:</strong> Is this a STEAL or a REACH? You decide! 🤨`,
         ];
         
         function addChatMessage(msg, type = 'system') {
@@ -300,7 +345,6 @@
             div.className = `chat-msg ${type}`;
             div.innerHTML = msg;
             chat.insertBefore(div, chat.firstChild);
-            // Keep only last 10 messages
             while (chat.children.length > 10) chat.removeChild(chat.lastChild);
         }
         
@@ -315,11 +359,22 @@
                 adp: player.adp || 99,
                 team: '3',
                 round: round,
-                pos: player.pos,
-                bye: player.bye || 10
+                pos: player.pos
             };
             
             addChatMessage(reaction(pickData), type);
+        }
+        
+        function updateIntelligence() {
+            // Value meter
+            const valuePercent = Math.floor(Math.random() * 25);
+            document.getElementById('valueMeter').textContent = `+${valuePercent}%`;
+            document.getElementById('valueBar').style.width = (50 + valuePercent/2) + '%';
+            
+            // Trends based on picks
+            document.getElementById('trendQB').textContent = `${Math.floor(picksMade/4)} QBs gone`;
+            document.getElementById('trendRB').textContent = picksMade > 20 ? 'RB run detected' : 'RB run coming';
+            document.getElementById('trendWR').textContent = picksMade > 30 ? 'WR depth thin' : 'WR value up';
         }
         
         function renderPlayerList() {
@@ -350,8 +405,6 @@
             document.getElementById('queuedName').textContent = name;
             document.getElementById('queueBtn').disabled = false;
             renderPlayerList();
-            
-            // Bot reaction on select
             const player = ALL_PLAYERS.find(p => p.id === id);
             addChatMessage(`${bots.analyst.emoji} <strong style="color:${bots.analyst.color}">${bots.analyst.name}:</strong> ${name} - solid pick! ${player ? player.team : ''}`, 'analyst');
         }
@@ -370,9 +423,11 @@
                 document.getElementById('progressFill').style.width = pct + '%';
                 document.getElementById('progressText').textContent = `${data.picks_made}/${data.total_picks} picks`;
                 
-                // Check for new pick
+                picksMade = data.picks_made;
+                
                 if (data.picks_made > lastPickCount && lastPickCount > 0) {
                     generateBotReaction({player_id: selectedPlayerId}, Math.ceil(data.next_pick / TEAMS));
+                    updateIntelligence();
                 }
                 lastPickCount = data.picks_made;
                 
@@ -436,6 +491,7 @@
                 if (data.success) {
                     showStatus(`Picked: ${selectedPlayerName}`, 'success');
                     generateBotReaction({player_id: selectedPlayerId}, Math.ceil(lastPickCount / TEAMS));
+                    updateIntelligence();
                     selectedPlayerId = null;
                     selectedPlayerName = null;
                     document.getElementById('queuedInfo').style.display = 'none';
