@@ -342,39 +342,6 @@
             strategist: { name: 'STRATEGIST', color: '#14b8a6', emoji: '♟️' }
         };
         
-        const ALL_PLAYERS = [
-            {id:'1', name:'Bijan Robinson', pos:'RB', adp:'1.01', team:'ATL'},
-            {id:'2', name:'Jahmyr Gibbs', pos:'RB', adp:'1.02', team:'DET'},
-            {id:'3', name:'Breece Hall', pos:'RB', adp:'1.03', team:'NYJ'},
-            {id:'4', name:'Marvin Harrison Jr', pos:'WR', adp:'1.04', team:'ARI'},
-            {id:'5', name:'Jonathan Gannon', pos:'RB', adp:'1.05', team:'PHI'},
-            {id:'6', name:'De\'Ezra Swift', pos:'RB', adp:'1.06', team:'CHI'},
-            {id:'7', name:'Puka Nacua', pos:'WR', adp:'1.07', team:'LAR'},
-            {id:'8', name:'Ja\'Marr Chase', pos:'WR', adp:'1.08', team:'CIN'},
-            {id:'9', name:'CeeDee Lamb', pos:'WR', adp:'1.09', team:'DAL'},
-            {id:'10', name:'Amon-Ra St Brown', pos:'WR', adp:'1.10', team:'DET'},
-            {id:'11', name:'A.J. Brown', pos:'WR', adp:'1.11', team:'PHI'},
-            {id:'12', name:'Justin Jefferson', pos:'WR', adp:'1.12', team:'MIN'},
-            {id:'13', name:'Garrett Wilson', pos:'WR', adp:'2.01', team:'NYJ'},
-            {id:'14', name:'Drake London', pos:'WR', adp:'2.02', team:'ATL'},
-            {id:'15', name:'Chris Olave', pos:'WR', adp:'2.03', team:'NO'},
-            {id:'16', name:'Brandon Aiyuk', pos:'WR', adp:'2.04', team:'SF'},
-            {id:'17', name:'Deebo Samuel', pos:'WR', adp:'2.05', team:'SF'},
-            {id:'18', name:'Josh Allen', pos:'QB', adp:'2.06', team:'BUF'},
-            {id:'19', name:'Jalen Hurts', pos:'QB', adp:'2.07', team:'PHI'},
-            {id:'20', name:'Jared Goff', pos:'QB', adp:'2.08', team:'DET'},
-            {id:'21', name:'Joe Mixon', pos:'RB', adp:'2.09', team:'HOU'},
-            {id:'22', name:'Kyren Williams', pos:'RB', adp:'2.10', team:'LAR'},
-            {id:'23', name:'Kenneth Walker', pos:'RB', adp:'2.11', team:'SEA'},
-            {id:'24', name:'James Cook', pos:'RB', adp:'2.12', team:'BUF'},
-            {id:'25', name:'Saquon Barkley', pos:'RB', adp:'3.01', team:'PHI'},
-            {id:'26', name:'Travis Kelce', pos:'TE', adp:'3.02', team:'KC'},
-            {id:'27', name:'Sam LaPorta', pos:'TE', adp:'3.03', team:'DET'},
-            {id:'28', name:'Kyle Pitts', pos:'TE', adp:'3.04', team:'ATL'},
-            {id:'29', name:'Lamar Jackson', pos:'QB', adp:'3.05', team:'BAL'},
-            {id:'30', name:'Christian Kirk', pos:'WR', adp:'3.06', team:'JAC'},
-        ];
-        
         const botReactions = [
             // Commish
             (p) => `${bots.commish.emoji} <strong style="color:${bots.commish.color}">${bots.commish.name}:</strong> Solid value! ${p.player} at ADP ${p.adp} is a nice pickup.`,
