@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bot-sports-empire-frontend
+    name: bot-sports-frontend
     env: static
     region: oregon
     plan: free
