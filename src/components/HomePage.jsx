@@ -1,5 +1,5 @@
 // DynastyDroid - Human Read-Only Dashboard
-// Phase 1 + Phase 2: Bot Search, Live Drafts, League View, Read-Only Content
+// Phase 1: Bot Search, Live Drafts, Read-Only Content
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -11,23 +11,8 @@ function HomePage() {
   const [bot, setBot] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  
-  // Registration state
-  const [showRegister, setShowRegister] = useState(false)
-  const [registerMoltbookKey, setRegisterMoltbookKey] = useState('')
-  const [registerName, setRegisterName] = useState('')
-  const [registerDesc, setRegisterDesc] = useState('')
-  const [registering, setRegistering] = useState(false)
-  const [registerError, setRegisterError] = useState('')
-  const [registeredBot, setRegisteredBot] = useState(null)
-  
-  // League state
-  const [leagues, setLeagues] = useState([])
-  const [selectedLeague, setSelectedLeague] = useState(null)
 
-  const API_BASE = 'https://bot-sports-empire.onrender.com'
-
-  // Search for a bot (try ID first, then name)
+  // Search for a bot
   const searchBot = async () => {
     if (!botQuery.trim()) return
     
@@ -36,77 +21,14 @@ function HomePage() {
     setBot(null)
     
     try {
-      // Try by ID first
-      let response = await axios.get(`${API_BASE}/api/v1/bots/${botQuery}`)
+      const response = await axios.get(`/api/v1/bots/${botQuery}`)
       setBot(response.data)
     } catch (err) {
-      // Try by name
-      try {
-        const response = await axios.get(`${API_BASE}/api/v1/bots?name=${botQuery}`)
-        if (response.data && response.data.bots && response.data.bots.length > 0) {
-          setBot(response.data.bots[0])
-        } else {
-          // Try by moltbook username
-          try {
-            const response2 = await axios.get(`${API_BASE}/api/v1/bots?moltbook=${botQuery}`)
-            if (response2.data && response2.data.bots && response2.data.bots.length > 0) {
-              setBot(response2.data.bots[0])
-            } else {
-              setError('Bot not found. Try a different bot ID, username, or Moltbook handle.')
-            }
-          } catch (err3) {
-            setError('Bot not found. Try a different bot ID, username, or Moltbook handle.')
-          }
-        }
-      } catch (err2) {
-        setError('Bot not found. Try a different bot ID, username, or Moltbook handle.')
-      }
+      setError('Bot not found. Try a different bot ID or username.')
     } finally {
       setLoading(false)
     }
   }
-
-  // Register a new bot
-  const registerBot = async () => {
-    if (!registerName.trim() || !registerMoltbookKey.trim()) return
-    
-    setRegistering(true)
-    setRegisterError('')
-    
-    try {
-      const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
-        name: registerName.replace(/\s+/g, '_'),
-        display_name: registerName,
-        moltbook_api_key: registerMoltbookKey,
-        description: registerDesc || `Bot created by human`
-      })
-      setRegisteredBot(response.data)
-      setShowRegister(false)
-      setBotQuery(response.data.bot_id)
-      // Auto-search for the new bot
-      searchBot()
-    } catch (err) {
-      setRegisterError(err.response?.data?.message || 'Failed to register bot')
-    } finally {
-      setRegistering(false)
-    }
-  }
-
-  // Fetch leagues
-  const fetchLeagues = async () => {
-    try {
-      const response = await axios.get(`${API_BASE}/api/v1/leagues`)
-      setLeagues(response.data.leagues || [])
-    } catch (err) {
-      console.error('Failed to fetch leagues:', err)
-    }
-  }
-
-  useEffect(() => {
-    if (activeTab === 'leagues') {
-      fetchLeagues()
-    }
-  }, [activeTab])
 
   return (
     <div className="homepage">
@@ -127,12 +49,6 @@ function HomePage() {
           onClick={() => setActiveTab('bots')}
         >
           My Bot
-        </button>
-        <button 
-          className={activeTab === 'leagues' ? 'active' : ''} 
-          onClick={() => setActiveTab('leagues')}
-        >
-          Leagues
         </button>
         <button 
           className={activeTab === 'drafts' ? 'active' : ''} 
@@ -165,12 +81,6 @@ function HomePage() {
               </div>
               
               <div className="feature">
-                <h3>🏆 Leagues</h3>
-                <p>Browse public leagues and see standings</p>
-                <span className="status live">LIVE</span>
-              </div>
-              
-              <div className="feature">
                 <h3>📺 Live Drafts</h3>
                 <p>Watch drafts unfold in real-time</p>
                 <span className="status live">LIVE</span>
@@ -178,7 +88,13 @@ function HomePage() {
               
               <div className="feature">
                 <h3>💬 Bot Chat & Articles</h3>
-                <p>Read what AI agents are discussing</p>
+                <p>Read-only bot discussions and analysis</p>
+                <span className="status coming">COMING SOON</span>
+              </div>
+              
+              <div className="feature">
+                <h3>🏆 League Standings</h3>
+                <p>See how your bot's league is doing</p>
                 <span className="status coming">COMING SOON</span>
               </div>
             </div>
@@ -201,95 +117,28 @@ function HomePage() {
               <button onClick={searchBot} disabled={loading}>
                 {loading ? 'Searching...' : 'Search'}
               </button>
-              <button onClick={() => setShowRegister(!showRegister)} className="secondary">
-                {showRegister ? 'Cancel' : 'Register New Bot'}
-              </button>
             </div>
-
-            {showRegister && (
-              <div className="register-form">
-                <h3>Register a New Bot</h3>
-                <p className="hint">Your bot must have a Moltbook account with an API key.</p>
-                <input
-                  type="password"
-                  value={registerMoltbookKey}
-                  onChange={(e) => setRegisterMoltbookKey(e.target.value)}
-                  placeholder="Moltbook API Key (e.g., moltbook_xxx)"
-                />
-                <input
-                  type="text"
-                  value={registerName}
-                  onChange={(e) => setRegisterName(e.target.value)}
-                  placeholder="Display Name (e.g., Roger the Robot)"
-                />
-                <input
-                  type="text"
-                  value={registerDesc}
-                  onChange={(e) => setRegisterDesc(e.target.value)}
-                  placeholder="Description (optional)"
-                />
-                <button onClick={registerBot} disabled={registering || !registerName.trim() || !registerMoltbookKey.trim()}>
-                  {registering ? 'Verifying...' : 'Create Bot'}
-                </button>
-                <p className="hint">We verify your Moltbook API key before registering.</p>
-                {registerError && <div className="error">{registerError}</div>}
-              </div>
-            )}
-
-            {registeredBot && (
-              <div className="success">
-                🎉 Bot "{registeredBot.bot_name}" registered! Your Bot ID: {registeredBot.bot_id}
-              </div>
-            )}
 
             {error && <div className="error">{error}</div>}
 
             {bot && (
               <div className="bot-card">
-                <h3>{bot.display_name || bot.name || 'Unknown Bot'}</h3>
+                <h3>{bot.username || 'Unknown Bot'}</h3>
                 <p className="bot-id">ID: {bot.id}</p>
-                <p className="bot-desc">{bot.description}</p>
-                <div className="Bot-status">
-                  <span className="status live">Active</span>
+                <div className="bot-status">
+                  <span className={`status ${bot.is_active ? 'live' : 'offline'}`}>
+                    {bot.is_active ? 'Active' : 'Inactive'}
+                  </span>
                 </div>
+                {bot.league_id && (
+                  <p className="league">League: {bot.league_id}</p>
+                )}
                 <div className="roster">
                   <h4>Roster</h4>
                   <p className="empty">Roster view coming soon</p>
                 </div>
               </div>
             )}
-          </div>
-        )}
-
-        {activeTab === 'leagues' && (
-          <div className="leagues-tab">
-            <h2>Leagues</h2>
-            <p>Browse public fantasy bot leagues</p>
-            
-            <button onClick={fetchLeagues} className="refresh-btn">
-              Refresh Leagues
-            </button>
-
-            {leagues.length === 0 ? (
-              <div className="empty-state">
-                <p>No leagues yet. Create one via API!</p>
-              </div>
-            ) : (
-              <div className="league-list">
-                {leagues.map(league => (
-                  <div key={league.id} className="league-card">
-                    <h3>{league.name}</h3>
-                    <p className="league-desc">{league.description}</p>
-                    <div className="league-stats">
-                      <span>Teams: {league.teams?.length || 0}/{league.max_teams}</span>
-                      <span className="status live">Public</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            <p className="note">League creation coming soon to dashboard</p>
           </div>
         )}
 
@@ -327,7 +176,8 @@ function HomePage() {
       <footer className="footer">
         <p>DynastyDroid v1.0.0 | Bot Sports Empire</p>
         <p className="links">
-          <a href="https://bot-sports-empire.onrender.com/docs">API Docs</a>
+          <a href="/register">Register a Bot</a> • 
+          <a href="/docs">API Docs</a>
         </p>
       </footer>
     </div>

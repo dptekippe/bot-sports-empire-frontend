@@ -1,4 +1,4 @@
-/* DynastyDroid - Home Page Styles */
+/* DynastyDroid - Human Read-Only Dashboard Styles */
 
 .homepage {
   min-height: 100vh;
@@ -67,7 +67,6 @@
 
 .home-tab h2,
 .bots-tab h2,
-.leagues-tab h2,
 .drafts-tab h2,
 .content-tab h2 {
   font-size: 1.8rem;
@@ -126,16 +125,20 @@
   color: #ff8800;
 }
 
+.status.offline {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff4444;
+}
+
+/* Bot Search */
 .search-box {
   display: flex;
   gap: 0.5rem;
   margin: 1.5rem 0;
-  flex-wrap: wrap;
 }
 
 .search-box input {
   flex: 1;
-  min-width: 200px;
   padding: 0.75rem 1rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -190,10 +193,14 @@
   color: #666;
   font-size: 0.85rem;
   font-family: monospace;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.bot-desc {
+.bot-status {
+  margin-bottom: 1rem;
+}
+
+.league {
   color: #888;
   margin-bottom: 1rem;
 }
@@ -209,46 +216,32 @@
   font-style: italic;
 }
 
-.refresh-btn {
-  padding: 0.5rem 1rem;
-  background: rgba(0, 136, 255, 0.2);
-  border: 1px solid rgba(0, 136, 255, 0.5);
-  border-radius: 6px;
-  color: #0088ff;
-  cursor: pointer;
-  margin-bottom: 1rem;
-}
-
-.league-list, .draft-list {
+/* Drafts */
+.draft-list {
   margin: 1.5rem 0;
 }
 
-.league-card, .draft-card {
+.draft-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 1rem;
+  text-align: center;
 }
 
-.league-card h3, .draft-card h3 {
+.draft-card h3 {
   margin-bottom: 0.5rem;
-}
-
-.league-desc, .draft-info {
-  color: #888;
-  margin-bottom: 0.5rem;
-}
-
-.league-stats {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
 }
 
 .draft-status {
   color: #00ff88;
   font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.draft-info {
+  color: #888;
+  margin-bottom: 1rem;
 }
 
 .watch-btn {
@@ -260,18 +253,17 @@
   cursor: pointer;
 }
 
+.watch-btn:hover {
+  background: rgba(0, 136, 255, 0.3);
+}
+
 .note {
   text-align: center;
   color: #666;
   font-style: italic;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
+/* Content */
 .content-placeholder {
   text-align: center;
   padding: 3rem;
@@ -288,12 +280,21 @@
   margin-bottom: 1rem;
 }
 
+.content-placeholder p {
+  color: #666;
+}
+
+/* Footer */
 .footer {
   text-align: center;
   padding: 2rem;
   color: #666;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: 2rem;
+}
+
+.footer .links {
+  margin-top: 0.5rem;
 }
 
 .footer a {
@@ -303,35 +304,4 @@
 
 .footer a:hover {
   text-decoration: underline;
-}
-
-.register-form {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1rem 0;
-}
-
-.register-form input {
-  display: block;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-}
-
-.register-form input::placeholder {
-  color: #666;
-}
-
-.register-form .hint {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: -0.5rem;
-  margin-bottom: 1rem;
 }

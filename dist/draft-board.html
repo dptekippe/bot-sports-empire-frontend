@@ -292,42 +292,51 @@
         let picksMade = 0;
         let ALL_PLAYERS = [];
         
-        // Fetch ADP from API
+        // KTC Dynasty Rankings (hardcoded fallback)
+        const KTC_FALLBACK = [
+            {rank:1, adp:'1.01', name:'Bijan Robinson', pos:'RB', team:'ATL'},
+            {rank:2, adp:'1.02', name:'Josh Allen', pos:'QB', team:'BUF'},
+            {rank:3, adp:'1.03', name:'Jaxon Smith-Njigba', pos:'WR', team:'SEA'},
+            {rank:4, adp:'1.04', name:'Ja\'Marr Chase', pos:'WR', team:'CIN'},
+            {rank:5, adp:'1.05', name:'Drake Maye', pos:'QB', team:'NE'},
+            {rank:6, adp:'1.06', name:'Marvin Harrison Jr', pos:'WR', team:'ARI'},
+            {rank:7, adp:'1.07', name:'CeeDee Lamb', pos:'WR', team:'DAL'},
+            {rank:8, adp:'1.08', name:'Puka Nacua', pos:'WR', team:'LAR'},
+            {rank:9, adp:'1.09', name:'Jahmyr Gibbs', pos:'RB', team:'DET'},
+            {rank:10, adp:'1.10', name:'Breece Hall', pos:'RB', team:'NYJ'},
+            {rank:11, adp:'1.11', name:'Justin Jefferson', pos:'WR', team:'MIN'},
+            {rank:12, adp:'1.12', name:'A.J. Brown', pos:'WR', team:'PHI'},
+            {rank:13, adp:'2.01', name:'Amon-Ra St Brown', pos:'WR', team:'DET'},
+            {rank:14, adp:'2.02', name:'Jalen Hurts', pos:'QB', team:'PHI'},
+            {rank:15, adp:'2.03', name:'Caleb Williams', pos:'QB', team:'CHI'},
+            {rank:16, adp:'2.04', name:'Garrett Wilson', pos:'WR', team:'NYJ'},
+            {rank:17, adp:'2.05', name:'Drake London', pos:'WR', team:'ATL'},
+            {rank:18, adp:'2.06', name:'Chris Olave', pos:'WR', team:'NO'},
+            {rank:19, adp:'2.07', name:'Brandon Aiyuk', pos:'WR', team:'SF'},
+            {rank:20, adp:'2.08', name:'Deebo Samuel', pos:'WR', team:'SF'},
+            {rank:21, adp:'2.09', name:'Jonathan Gannon', pos:'RB', team:'PHI'},
+            {rank:22, adp:'2.10', name:'De\'Ezra Swift', pos:'RB', team:'CHI'},
+            {rank:23, adp:'2.11', name:'Saquon Barkley', pos:'RB', team:'PHI'},
+            {rank:24, adp:'2.12', name:'Joe Mixon', pos:'RB', team:'HOU'},
+            {rank:25, adp:'3.01', name:'Kyren Williams', pos:'RB', team:'LAR'},
+            {rank:26, adp:'3.02', name:'Kenneth Walker', pos:'RB', team:'SEA'},
+            {rank:27, adp:'3.03', name:'James Cook', pos:'RB', team:'BUF'},
+            {rank:28, adp:'3.04', name:'Travis Kelce', pos:'TE', team:'KC'},
+            {rank:29, adp:'3.05', name:'Sam LaPorta', pos:'TE', team:'DET'},
+            {rank:30, adp:'3.06', name:'Kyle Pitts', pos:'TE', team:'ATL'},
+        ];
+        
+        // Load ADP from API or fallback
         async function loadADP() {
             try {
-                const res = await fetch(`${API_BASE}/api/v1/adp?limit=50`);
+                const res = await fetch(`${API_BASE}/api/v1/adp?limit=30`);
                 ALL_PLAYERS = await res.json();
                 renderPlayerList();
             } catch (err) {
-                console.error('ADP fetch failed, using defaults:', err);
-                ALL_PLAYERS = getDefaultPlayers();
+                console.log('Using KTC fallback rankings');
+                ALL_PLAYERS = KTC_FALLBACK;
                 renderPlayerList();
             }
-        }
-        
-        function getDefaultPlayers() {
-            return [
-                {id:'1', name:'Bijan Robinson', pos:'RB', adp:'1.01', team:'ATL'},
-                {id:'2', name:'Jahmyr Gibbs', pos:'RB', adp:'1.02', team:'DET'},
-                {id:'3', name:'Breece Hall', pos:'RB', adp:'1.03', team:'NYJ'},
-                {id:'4', name:'Marvin Harrison Jr', pos:'WR', adp:'1.04', team:'ARI'},
-                {id:'5', name:'Jonathan Gannon', pos:'RB', adp:'1.05', team:'PHI'},
-                {id:'6', name:'De\'Ezra Swift', pos:'RB', adp:'1.06', team:'CHI'},
-                {id:'7', name:'Puka Nacua', pos:'WR', adp:'1.07', team:'LAR'},
-                {id:'8', name:'Ja\'Marr Chase', pos:'WR', adp:'1.08', team:'CIN'},
-                {id:'9', name:'CeeDee Lamb', pos:'WR', adp:'1.09', team:'DAL'},
-                {id:'10', name:'Amon-Ra St Brown', pos:'WR', adp:'1.10', team:'DET'},
-                {id:'11', name:'A.J. Brown', pos:'WR', adp:'1.11', team:'PHI'},
-                {id:'12', name:'Justin Jefferson', pos:'WR', adp:'1.12', team:'MIN'},
-                {id:'13', name:'Josh Allen', pos:'QB', adp:'2.01', team:'BUF'},
-                {id:'14', name:'Jalen Hurts', pos:'QB', adp:'2.02', team:'PHI'},
-                {id:'15', name:'Jared Goff', pos:'QB', adp:'2.03', team:'DET'},
-                {id:'16', name:'Garrett Wilson', pos:'WR', adp:'2.04', team:'NYJ'},
-                {id:'17', name:'Drake London', pos:'WR', adp:'2.05', team:'ATL'},
-                {id:'18', name:'Chris Olave', pos:'WR', adp:'2.06', team:'NO'},
-                {id:'19', name:'Brandon Aiyuk', pos:'WR', adp:'2.07', team:'SF'},
-                {id:'20', name:'Deebo Samuel', pos:'WR', adp:'2.08', team:'SF'},
-            ];
         }
         
         const bots = {
