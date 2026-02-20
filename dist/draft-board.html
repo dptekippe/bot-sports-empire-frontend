@@ -292,8 +292,8 @@
         let picksMade = 0;
         let ALL_PLAYERS = [];
         
-        // KTC Dynasty Rankings (hardcoded fallback)
-        const KTC_FALLBACK = [
+        // Dynasty rankings (fallback - no API needed)
+        const DYNASTY_PLAYERS = [
             {rank:1, adp:'1.01', name:'Bijan Robinson', pos:'RB', team:'ATL'},
             {rank:2, adp:'1.02', name:'Josh Allen', pos:'QB', team:'BUF'},
             {rank:3, adp:'1.03', name:'Jaxon Smith-Njigba', pos:'WR', team:'SEA'},
@@ -327,9 +327,9 @@
         ];
         
         // Load ADP from API or fallback
-        // Load players - using hardcoded KTC fallback for now
+        // Load players - using hardcoded dynasty rankings
         function loadADP() {
-            ALL_PLAYERS = KTC_FALLBACK;
+            ALL_PLAYERS = DYNASTY_PLAYERS;
             renderPlayerList();
         }
         
