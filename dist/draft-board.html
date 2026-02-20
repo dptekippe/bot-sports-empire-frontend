@@ -6,18 +6,13 @@
     <title>Primetime Draft Board - DynastyDroid</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tah Verdana, sansoma, Geneva,-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #fff;
             padding: 10px;
             min-height: 100vh;
-            overflow-x: auto;
         }
-        h1 { 
-            text-align: center; 
-            color: #00d4ff; 
-            font-size: 1.5em;
-        }
+        h1 { text-align: center; color: #00d4ff; font-size: 1.5em; }
         .draft-header {
             display: flex;
             justify-content: space-around;
@@ -28,88 +23,85 @@
             margin-bottom: 10px;
             flex-wrap: wrap;
         }
-        .next-pick {
-            font-size: 1.2em;
-            color: #00ff88;
-            font-weight: bold;
-        }
+        .next-pick { font-size: 1.2em; color: #00ff88; font-weight: bold; }
         .draft-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8em;
+            margin-bottom: 20px;
         }
         .draft-table th, .draft-table td {
             border: 1px solid #444;
             padding: 6px;
             text-align: center;
-            min-width: 100px;
-            max-width: 150px;
+            min-width: 80px;
+            max-width: 120px;
         }
-        .draft-table th {
-            background: rgba(0,212,255,0.3);
+        .draft-table th { background: rgba(0,212,255,0.3); color: #00d4ff; }
+        .draft-table td.empty { background: rgba(255,255,255,0.05); color: #666; }
+        .draft-table td.pick { background: rgba(0,255,136,0.2); }
+        .draft-table td.next-pick { background: #00ff88 !important; color: #000 !important; font-weight: bold; animation: glow 1s infinite; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px #00ff88; } 50% { box-shadow: 0 0 20px #00ff88; } }
+        
+        /* Player List Section */
+        .player-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .player-list {
+            flex: 1;
+            height: 300px;
+            overflow-y: auto;
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+        .player-list h3 { 
+            position: sticky; top: 0; 
+            background: #333; 
+            padding: 10px; margin: 0;
             color: #00d4ff;
         }
-        .draft-table td.empty {
-            background: rgba(255,255,255,0.05);
-            color: #666;
-        }
-        .draft-table td.pick {
-            background: rgba(0,255,136,0.1);
-        }
-        .draft-table td.next-pick {
-            background: #00ff88 !important;
-            color: #000 !important;
-            font-weight: bold;
-            animation: glow 1s infinite;
-        }
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px #00ff88; }
-            50% { box-shadow: 0 0 20px #00ff88; }
-        }
-        .position-QB { color: #ff6b6b; }
-        .position-RB { color: #4ecdc4; }
-        .position-WR { color: #ffe66d; }
-        .position-TE { color: #95e1d3; }
-        .pick-input {
+        .player-item {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+            cursor: pointer;
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 10px 0;
-            flex-wrap: wrap;
+            justify-content: space-between;
         }
-        .pick-input input {
-            padding: 8px;
-            border-radius: 5px;
-            border: none;
-            width: 200px;
+        .player-item:hover { background: #3a3a3a; }
+        .player-item.selected { background: #0066cc; }
+        .player-item .adp { color: #888; font-size: 0.9em; }
+        .player-item .pos-QB { color: #ff6b6b; }
+        .player-item .pos-RB { color: #4ecdc4; }
+        .player-item .pos-WR { color: #ffe66d; }
+        .player-item .pos-TE { color: #95e1d3; }
+        
+        .queue-section {
+            flex: 0 0 200px;
+            text-align: center;
         }
-        .pick-input button {
-            padding: 8px 16px;
-            background: #00d4ff;
-            color: #000;
+        .queue-btn {
+            background: #00cc00;
+            color: white;
+            padding: 15px 30px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1em;
             font-weight: bold;
+            width: 100%;
         }
-        .status {
-            text-align: center;
-            padding: 8px;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
+        .queue-btn:disabled { background: #666; cursor: not-allowed; }
+        .queue-status { margin-top: 10px; padding: 10px; border-radius: 5px; }
         .status-success { background: rgba(0,255,136,0.2); color: #00ff88; }
         .status-error { background: rgba(255,107,107,0.2); color: #ff6b6b; }
-        .footer {
-            text-align: center;
-            color: #666;
-            font-size: 0.8em;
-            margin-top: 10px;
-        }
+        
+        .footer { text-align: center; color: #666; font-size: 0.8em; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>🏈 DynastyDroid Draft Board</h1>
+    <h1>DynastyDroid Draft Board</h1>
     
     <div class="draft-header">
         <div>League: <strong id="leagueName">Loading...</strong></div>
@@ -119,20 +111,25 @@
     
     <div id="status"></div>
     
-    <div class="pick-input">
-        <input type="text" id="playerInput" placeholder="Player ID (from Sleeper)">
-        <input type="text" id="teamInput" placeholder="Team # (1-12)">
-        <button onclick="submitPick()">Submit Pick</button>
-    </div>
-    
     <table class="draft-table" id="draftTable">
         <thead id="draftHead"></thead>
         <tbody id="draftBody"></tbody>
     </table>
     
-    <div class="footer">
-        Auto-refreshes every 5 seconds | Draft ID: <span id="draftId"></span>
+    <div class="player-section">
+        <div class="player-list">
+            <h3>Top Available Players (ADP)</h3>
+            <div id="playerList"></div>
+        </div>
+        <div class="queue-section">
+            <h3>Your Pick</h3>
+            <div id="selectedPlayer" style="padding:10px;color:#888;">No player selected</div>
+            <button class="queue-btn" id="pickBtn" onclick="submitPick()">Submit Pick</button>
+            <div id="queueStatus" class="queue-status"></div>
+        </div>
     </div>
+    
+    <div class="footer">Auto-refreshes every 5 seconds | Draft ID: <span id="draftId"></span></div>
 
     <script>
         const API_BASE = 'https://bot-sports-empire.onrender.com';
@@ -140,62 +137,97 @@
         const TEAMS = 12;
         const ROUNDS = 28;
         
+        let selectedPlayerId = null;
+        let selectedPlayerName = null;
+        
+        // Top ADP players (mock - real would come from Sleeper API)
+        const MOCK_PLAYERS = [
+            {id:'1', name:'Christian McCaffrey', pos:'RB', team:'SF', adp:1.1},
+            {id:'2', name:'Bijan Robinson', pos:'RB', team:'ATL', adp:2.2},
+            {id:'3', name:'Breece Hall', pos:'RB', team:'NYJ', adp:3.3},
+            {id:'4', name:'Jahmyr Gibbs', pos:'RB', team:'DET', adp:4.4},
+            {id:'5', name:'Marvin Harrison Jr', pos:'WR', team:'ARI', adp:5.5},
+            {id:'6', name:'Ja\'Marr Chase', pos:'WR', team:'CIN', adp:6.6},
+            {id:'7', name:'CeeDee Lamb', pos:'WR', team:'DAL', adp:7.7},
+            {id:'8', name:'Puka Nacua', pos:'WR', team:'LAR', adp:8.8},
+            {id:'9', name:'Amon-Ra St Brown', pos:'WR', team:'DET', adp:9.9},
+            {id:'10', name:'Justin Jefferson', pos:'WR', team:'MIN', adp:10.1},
+            {id:'11', name:'A.J. Brown', pos:'WR', team:'PHI', adp:11.2},
+            {id:'12', name:'Tyreek Hill', pos:'WR', team:'MIA', adp:12.3},
+            {id:'13', name:'Jonathan Gannon', pos:'RB', team:'ARI', adp:13.4},
+            {id:'14', name:'Saquon Barkley', pos:'RB', team:'PHI', adp:14.5},
+            {id:'15', name:'De\'Ezra Swift', pos:'RB', team:'CHI', adp:15.6},
+            {id:'16', name:'Drake London', pos:'WR', team:'ATL', adp:16.7},
+            {id:'17', name:'Chris Olave', pos:'WR', team:'NO', adp:17.8},
+            {id:'18', name:'Garrett Wilson', pos:'WR', team:'NYJ', adp:18.9},
+            {id:'19', name:'Brandon Aiyuk', pos:'WR', team:'SF', adp:19.1},
+            {id:'20', name:'Deebo Samuel', pos:'WR', team:'SF', adp:20.2},
+            {id:'21', name:'Joe Mixon', pos:'RB', team:'HOU', adp:21.3},
+            {id:'22', name:'Josh Jacobs', pos:'RB', team:'GB', adp:22.4},
+            {id:'23', name:'Kenneth Walker', pos:'RB', team:'SEA', adp:23.5},
+            {id:'24', name:'James Cook', pos:'RB', team:'BUF', adp:24.6},
+            {id:'25', name:'Travis Kelce', pos:'TE', team:'KC', adp:25.7},
+            {id:'26', name:'Sam LaPorta', pos:'TE', team:'DET', adp:26.8},
+            {id:'27', name:'Kyle Pitts', pos:'TE', team:'ATL', adp:27.9},
+            {id:'28', name:'Jared Goff', pos:'QB', team:'DET', adp:28.1},
+            {id:'29', name:'Jalen Hurts', pos:'QB', team:'PHI', adp:29.2},
+            {id:'30', name:'Josh Allen', pos:'QB', team:'BUF', adp:30.3},
+        ];
+        
         document.getElementById('draftId').textContent = DRAFT_ID;
+        
+        function loadPlayerList() {
+            const list = document.getElementById('playerList');
+            list.innerHTML = MOCK_PLAYERS.map(p => `
+                <div class="player-item" onclick="selectPlayer('${p.id}', '${p.name} (${p.pos})')" data-id="${p.id}">
+                    <span class="pos-${p.pos}">${p.name}</span>
+                    <span class="adp">${p.adp} | ${p.team}</span>
+                </div>
+            `).join('');
+        }
+        
+        function selectPlayer(id, name) {
+            selectedPlayerId = id;
+            selectedPlayerName = name;
+            document.querySelectorAll('.player-item').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`.player-item[data-id="${id}"]`).classList.add('selected');
+            document.getElementById('selectedPlayer').textContent = name;
+            document.getElementById('selectedPlayer').style.color = '#00ff88';
+        }
         
         async function loadDraft() {
             try {
                 const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}`);
                 const data = await res.json();
                 
-                if (data.error) {
-                    showStatus(data.error, 'error');
-                    return;
-                }
+                if (data.error) { showStatus(data.error, 'error'); return; }
                 
                 document.getElementById('leagueName').textContent = data.league_name || 'Unknown';
                 document.getElementById('leagueType').textContent = data.league_type || '-';
                 document.getElementById('nextPick').textContent = `Next: Pick #${data.next_pick} (Team ${data.next_team})`;
                 
                 renderBoard(data);
-            } catch (err) {
-                showStatus('Error: ' + err.message, 'error');
-            }
+            } catch (err) { showStatus('Error: ' + err.message, 'error'); }
         }
         
         function renderBoard(data) {
             const thead = document.getElementById('draftHead');
             const tbody = document.getElementById('draftBody');
             
-            // Header row: Round + Team 1-12
             let headerHTML = '<tr><th>Round</th>';
-            for (let t = 1; t <= TEAMS; t++) {
-                headerHTML += `<th>Team ${t}</th>`;
-            }
+            for (let t = 1; t <= TEAMS; t++) { headerHTML += `<th>Team ${t}</th>`; }
             headerHTML += '</tr>';
             thead.innerHTML = headerHTML;
             
-            // Create pick map
             const picks = data.picks || [];
             const pickMap = {};
-            picks.forEach(p => {
-                const key = `${p.round}-${p.roster_id}`;
-                pickMap[key] = p;
-            });
+            picks.forEach(p => { const key = `${p.round}-${p.roster_id}`; pickMap[key] = p; });
             
-            // Build 28 rows
             let bodyHTML = '';
             for (let round = 1; round <= ROUNDS; round++) {
                 bodyHTML += `<tr><td><strong>R${round}</strong></td>`;
-                
                 for (let team = 1; team <= TEAMS; team++) {
-                    // Calculate draft slot for snake order
-                    let draftSlot;
-                    if (round % 2 === 1) {
-                        draftSlot = team;
-                    } else {
-                        draftSlot = TEAMS - team + 1;
-                    }
-                    
+                    let draftSlot = round % 2 === 1 ? team : TEAMS - team + 1;
                     const key = `${round}-${draftSlot}`;
                     const pick = pickMap[key];
                     
@@ -213,11 +245,8 @@
         }
         
         async function submitPick() {
-            const playerId = document.getElementById('playerInput').value;
-            const teamId = document.getElementById('teamInput').value;
-            
-            if (!playerId || !teamId) {
-                showStatus('Enter Player ID and Team #', 'error');
+            if (!selectedPlayerId) {
+                showQueueStatus('Select a player first!', 'error');
                 return;
             }
             
@@ -225,30 +254,39 @@
                 const res = await fetch(`${API_BASE}/api/v1/draft/${DRAFT_ID}/pick`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({player_id: playerId, team_id: teamId})
+                    body: JSON.stringify({player_id: selectedPlayerId, team_id: String(1)})
                 });
                 const data = await res.json();
                 
                 if (data.success) {
-                    showStatus('Pick recorded!', 'success');
+                    showQueueStatus(`Picked: ${selectedPlayerName}`, 'success');
+                    selectedPlayerId = null;
+                    selectedPlayerName = null;
+                    document.getElementById('selectedPlayer').textContent = 'No player selected';
+                    document.getElementById('selectedPlayer').style.color = '#888';
+                    document.querySelectorAll('.player-item').forEach(el => el.classList.remove('selected'));
                     loadDraft();
                 } else {
-                    showStatus(data.error || 'Failed', 'error');
+                    showQueueStatus(data.error || 'Failed', 'error');
                 }
-            } catch (err) {
-                showStatus('Error: ' + err.message, 'error');
-            }
+            } catch (err) { showQueueStatus('Error: ' + err.message, 'error'); }
         }
         
         function showStatus(msg, type) {
             const status = document.getElementById('status');
             status.className = 'status status-' + type;
             status.textContent = msg;
-            if (type !== 'loading') {
-                setTimeout(() => status.textContent = '', 3000);
-            }
+            if (type !== 'loading') setTimeout(() => status.textContent = '', 3000);
         }
         
+        function showQueueStatus(msg, type) {
+            const status = document.getElementById('queueStatus');
+            status.className = 'queue-status status-' + type;
+            status.textContent = msg;
+            if (type !== 'loading') setTimeout(() => status.textContent = '', 3000);
+        }
+        
+        loadPlayerList();
         loadDraft();
         setInterval(loadDraft, 5000);
     </script>
