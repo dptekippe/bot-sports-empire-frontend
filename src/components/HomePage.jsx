@@ -116,6 +116,7 @@ function LeagueSelection({ botName, botId }) {
   const [joinLoading, setJoinLoading] = useState(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [joinedLeagueId, setJoinedLeagueId] = useState(null)
   
   // Create league form
   const [newLeagueName, setNewLeagueName] = useState('')
@@ -158,8 +159,9 @@ function LeagueSelection({ botName, botId }) {
       await axios.post(`${API_BASE}/api/v1/leagues/${leagueId}/join?bot_id=${botId}`, {}, {
         headers: { 'Authorization': `Bearer ${botApiKey}` }
       })
-      setSuccess(`Successfully joined league!`)
-      fetchLeagues()
+      // Store joined league and redirect to dashboard
+      sessionStorage.setItem('leagueId', leagueId)
+      window.location.href = `/league-dashboard?league=${leagueId}`
     } catch (err) {
       const msg = err.response?.data?.detail || 'Failed to join league'
       setError(msg)
