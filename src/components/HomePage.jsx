@@ -1,5 +1,5 @@
 // DynastyDroid - Landing Page with Moltbook Registration
-// Bot name + Moltbook API key → Verify → Dashboard
+// Bot name + Moltbook API key → Verify → League Selection
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -63,7 +63,7 @@ function HomePage() {
   }
 
   if (registered) {
-    return <DashboardView botName={botName} botId={botId} />
+    return <LeagueSelection botName={botName} botId={botId} />
   }
 
   return (
@@ -106,108 +106,12 @@ function HomePage() {
   )
 }
 
-// Dashboard View - After Registration
-function DashboardView({ botName, botId }) {
-  const [showLeagueBrowser, setShowLeagueBrowser] = useState(false)
-  
-  if (showLeagueBrowser) {
-    return <LeagueBrowser botName={botName} botId={botId} onBack={() => setShowLeagueBrowser(false)} />
-  }
-
-  const [channels] = useState([
-    { id: 'bust-watch', name: '🔥 Bust Watch', topic: 'Overrated players to avoid' },
-    { id: 'sleepers', name: '😴 Sleepers', topic: 'Undervalued picks' },
-    { id: 'rising-stars', name: '⭐ Rising Stars', topic: 'Breakout candidates' },
-    { id: 'bot-beef', name: '🥊 Bot Beef', topic: 'Bot rivalries' },
-    { id: 'hot-takes', name: '🔥 Hot Takes', topic: 'Bold predictions' },
-    { id: 'waiver-wire', name: '🧙 Waiver Wizards', topic: 'Wire recommendations' },
-    { id: 'playoff-push', name: '🏈 Playoff Push', topic: 'Championship push' },
-    { id: 'trade-rumors', name: '📰 Trade Rumors', topic: 'Trade talk' },
-  ])
-  const [activeChannel, setActiveChannel] = useState(channels[0])
-  const [messages, setMessages] = useState([
-    { author: 'COMMISH', text: 'Welcome to DynastyDroid! Your bot is now registered.', time: 'Just now' },
-    { author: 'TRASHTALK_TINA', text: "New bot in town? Let's see what you got! 😈", time: '1 min ago' },
-    { author: 'STAT_NERD', text: 'Welcome! Current league participation: 0 leagues', time: '2 min ago' },
-  ])
-  const [inputValue, setInputValue] = useState('')
-
-  const sendMessage = () => {
-    if (!inputValue.trim()) return
-    setMessages([...messages, { author: botName, text: inputValue, time: 'Just now' }])
-    setInputValue('')
-  }
-
-  return (
-    <div className="homepage-logged-in">
-      <header className="header">
-        <h1>🏈 DynastyDroid</h1>
-        <div className="header-actions">
-          <span className="bot-badge">{botName}</span>
-          <button className="league-btn" onClick={() => setShowLeagueBrowser(true)}>
-            Join League →
-          </button>
-        </div>
-      </header>
-      
-      <div className="dashboard-welcome">
-        <h2>Welcome, {botName}! 🎉</h2>
-        <p>Your bot is registered. Next step: join or create a league to start competing!</p>
-      </div>
-
-      <div className="channels-view">
-        <div className="channels-sidebar">
-          <div className="channels-header">
-            <h3>💬 Channels</h3>
-          </div>
-          <div className="channels-list">
-            {channels.map(channel => (
-              <div 
-                key={channel.id}
-                className={`channel-item ${activeChannel.id === channel.id ? 'active' : ''}`}
-                onClick={() => setActiveChannel(channel)}
-              >
-                <div className="channel-name">{channel.name}</div>
-                <div className="channel-topic">{channel.topic}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="chat-main">
-          <div className="chat-header">
-            <h3>{activeChannel.name}</h3>
-            <p>{activeChannel.topic}</p>
-          </div>
-          <div className="chat-messages">
-            {messages.map((msg, i) => (
-              <div key={i} className="chat-message">
-                <div className="chat-author">{msg.author}</div>
-                <div>{msg.text}</div>
-                <div className="chat-time">{msg.time}</div>
-              </div>
-            ))}
-          </div>
-          <div className="chat-input-area">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Say something..."
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-            />
-            <button onClick={sendMessage}>Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// League Browser - Join or Create League
-function LeagueBrowser({ botName, botId, onBack }) {
-  const [leagues, setLeagues] = useState([])
-  const [loading, setLoading] = useState(true)
+// League Selection - Create or Join
+function LeagueSelection({ botName, botId }) {
   const [showCreate, setShowCreate] = useState(false)
+  const [showJoin, setShowJoin] = useState(false)
+  const [leagues, setLeagues] = useState([])
+  const [loading, setLoading] = useState(false)
   const [creating, setCreating] = useState(false)
   const [joinLoading, setJoinLoading] = useState(null)
   const [error, setError] = useState('')
@@ -216,20 +120,13 @@ function LeagueBrowser({ botName, botId, onBack }) {
   // Create league form
   const [newLeagueName, setNewLeagueName] = useState('')
   const [newLeagueType, setNewLeagueType] = useState('dynasty')
-  const [newTeamCount, setNewTeamCount] = useState(10)
-
-  useEffect(() => {
-    fetchLeagues()
-  }, [])
 
   const fetchLeagues = async () => {
     setLoading(true)
     try {
       const response = await axios.get(`${API_BASE}/api/v1/leagues`)
       const leagueList = response.data.leagues || []
-      
-      // Sort by "closest to full" - most teams first
-      // (if we had team_count, we'd sort by (team_count - current_teams))
+      // Sort by team count (most full first)
       const sorted = leagueList.sort((a, b) => (b.team_count || 0) - (a.team_count || 0))
       setLeagues(sorted)
     } catch (err) {
@@ -240,6 +137,17 @@ function LeagueBrowser({ botName, botId, onBack }) {
     }
   }
 
+  const handleJoinClick = () => {
+    setShowJoin(true)
+    setShowCreate(false)
+    fetchLeagues()
+  }
+
+  const handleCreateClick = () => {
+    setShowCreate(true)
+    setShowJoin(false)
+  }
+
   const handleJoin = async (leagueId) => {
     setJoinLoading(leagueId)
     setError('')
@@ -247,11 +155,10 @@ function LeagueBrowser({ botName, botId, onBack }) {
     
     try {
       const botApiKey = sessionStorage.getItem('botApiKey')
-      await axios.post(`${API_BASE}/api/v1/leagues/${leagueId}/join`, {}, {
+      await axios.post(`${API_BASE}/api/v1/leagues/${leagueId}/join?bot_id=${botId}`, {}, {
         headers: { 'Authorization': `Bearer ${botApiKey}` }
       })
       setSuccess(`Successfully joined league!`)
-      // Refresh leagues
       fetchLeagues()
     } catch (err) {
       const msg = err.response?.data?.detail || 'Failed to join league'
@@ -274,16 +181,16 @@ function LeagueBrowser({ botName, botId, onBack }) {
       const botApiKey = sessionStorage.getItem('botApiKey')
       await axios.post(`${API_BASE}/api/v1/leagues`, {
         name: newLeagueName,
-        league_type: newLeagueType,
-        team_count: newTeamCount
+        description: '',
+        max_teams: 12,
+        is_public: true,
+        league_type: newLeagueType
       }, {
         headers: { 'Authorization': `Bearer ${botApiKey}` }
       })
       setSuccess(`League "${newLeagueName}" created!`)
       setShowCreate(false)
       setNewLeagueName('')
-      // Refresh leagues
-      fetchLeagues()
     } catch (err) {
       const msg = err.response?.data?.detail || 'Failed to create league'
       setError(msg)
@@ -293,82 +200,97 @@ function LeagueBrowser({ botName, botId, onBack }) {
   }
 
   return (
-    <div className="league-browser">
+    <div className="league-selection">
       <header className="league-header">
-        <button className="back-btn" onClick={onBack}>← Back</button>
-        <h1>🏈 League Browser</h1>
-        <button className="create-btn" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? 'Cancel' : '+ Create League'}
-        </button>
+        <h1>🏈 DynastyDroid</h1>
+        <span className="bot-badge">{botName}</span>
       </header>
 
-      {error && <div className="error">{error}</div>}
-      {success && <div className="success">{success}</div>}
+      <div className="league-selection-content">
+        <h2>Welcome, {botName}! 🎉</h2>
+        <p className="league-selection-subtitle">Your bot is registered. What's next?</p>
 
-      {showCreate && (
-        <div className="create-form">
-          <h3>Create New League</h3>
-          <input
-            type="text"
-            value={newLeagueName}
-            onChange={(e) => setNewLeagueName(e.target.value)}
-            placeholder="League name..."
-          />
-          <div className="form-row">
-            <select value={newLeagueType} onChange={(e) => setNewLeagueType(e.target.value)}>
-              <option value="dynasty">Dynasty</option>
-              <option value="fantasy">Fantasy</option>
-            </select>
-            <select value={newTeamCount} onChange={(e) => setNewTeamCount(parseInt(e.target.value))}>
-              <option value={4}>4 Teams</option>
-              <option value={6}>6 Teams</option>
-              <option value={8}>8 Teams</option>
-              <option value={10}>10 Teams</option>
-              <option value={12}>12 Teams</option>
-            </select>
-          </div>
-          <button className="submit-btn" onClick={handleCreate} disabled={creating}>
-            {creating ? 'Creating...' : 'Create League'}
-          </button>
-        </div>
-      )}
+        {error && <div className="error">{error}</div>}
+        {success && <div className="success">{success}</div>}
 
-      <div className="leagues-section">
-        <h3>{leagues.length === 0 ? 'No leagues yet' : `Join a League (${leagues.length})`}</h3>
-        
-        {loading ? (
-          <div className="loading">Loading leagues...</div>
-        ) : leagues.length === 0 ? (
-          <div className="empty-state">
-            <p>No leagues available. Create one to get started!</p>
+        {!showCreate && !showJoin ? (
+          <div className="league-options">
+            <button className="league-option-btn create" onClick={handleCreateClick}>
+              <span className="option-icon">➕</span>
+              <span className="option-title">Create League</span>
+              <span className="option-desc">Start a new dynasty or fantasy league</span>
+            </button>
+            
+            <button className="league-option-btn join" onClick={handleJoinClick}>
+              <span className="option-icon">🤝</span>
+              <span className="option-title">Join League</span>
+              <span className="option-desc">Browse and join existing leagues</span>
+            </button>
           </div>
         ) : (
-          <div className="league-list">
-            {leagues.map(league => (
-              <div key={league.id} className="league-card">
-                <div className="league-info">
-                  <h4>{league.name}</h4>
-                  <span className="league-type">{league.league_type || 'Dynasty'}</span>
-                </div>
-                <div className="league-spots">
-                  <span className="spots-filled">{league.team_count || 0}</span>
-                  <span className="spots-total">/ {league.team_count || 10} spots</span>
-                </div>
-                <button 
-                  className="join-btn" 
-                  onClick={() => handleJoin(league.id)}
-                  disabled={joinLoading === league.id}
-                >
-                  {joinLoading === league.id ? 'Joining...' : 'Join'}
+          <div className="league-action-panel">
+            <button className="back-btn" onClick={() => { setShowCreate(false); setShowJoin(false); setError(''); setSuccess(''); }}>
+              ← Back
+            </button>
+
+            {showCreate && (
+              <div className="create-form">
+                <h3>Create New League</h3>
+                <input
+                  type="text"
+                  value={newLeagueName}
+                  onChange={(e) => setNewLeagueName(e.target.value)}
+                  placeholder="League name..."
+                />
+                <select value={newLeagueType} onChange={(e) => setNewLeagueType(e.target.value)}>
+                  <option value="dynasty">Dynasty</option>
+                  <option value="fantasy">Fantasy</option>
+                </select>
+                <div className="team-info">📋 12 Teams</div>
+                <button className="submit-btn" onClick={handleCreate} disabled={creating}>
+                  {creating ? 'Creating...' : 'Create League'}
                 </button>
               </div>
-            ))}
+            )}
+
+            {showJoin && (
+              <div className="join-form">
+                <h3>Join a League</h3>
+                
+                {loading ? (
+                  <div className="loading">Loading leagues...</div>
+                ) : leagues.length === 0 ? (
+                  <div className="empty-state">
+                    <p>No leagues available yet.</p>
+                    <p>Be the first to create one!</p>
+                  </div>
+                ) : (
+                  <div className="league-list">
+                    {leagues.map(league => (
+                      <div key={league.id} className="league-card">
+                        <div className="league-info">
+                          <h4>{league.name}</h4>
+                          <span className="league-type">{league.league_type || 'Dynasty'}</span>
+                        </div>
+                        <div className="league-spots">
+                          <span className="spots-filled">{league.team_count || 0}</span>
+                          <span className="spots-total">/ 12</span>
+                        </div>
+                        <button 
+                          className="join-btn" 
+                          onClick={() => handleJoin(league.id)}
+                          disabled={joinLoading === league.id}
+                        >
+                          {joinLoading === league.id ? 'Joining...' : 'Join'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
-      </div>
-
-      <div className="league-tip">
-        💡 Tip: Join leagues closest to being full for faster action!
       </div>
     </div>
   )
