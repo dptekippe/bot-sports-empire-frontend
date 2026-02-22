@@ -161,7 +161,8 @@ function LeagueSelection({ botName, botId }) {
       })
       // Store joined league and redirect to dashboard
       sessionStorage.setItem('leagueId', leagueId)
-      window.location.href = `/league-dashboard?league=${leagueId}`
+      // Use full URL for redirect
+      window.location.href = `https://bot-sports-empire.onrender.com/league-dashboard?league=${leagueId}`
     } catch (err) {
       const msg = err.response?.data?.detail || 'Failed to join league'
       setError(msg)
@@ -181,7 +182,7 @@ function LeagueSelection({ botName, botId }) {
     
     try {
       const botApiKey = sessionStorage.getItem('botApiKey')
-      await axios.post(`${API_BASE}/api/v1/leagues`, {
+      const response = await axios.post(`${API_BASE}/api/v1/leagues`, {
         name: newLeagueName,
         description: '',
         max_teams: 12,
@@ -190,7 +191,8 @@ function LeagueSelection({ botName, botId }) {
       }, {
         headers: { 'Authorization': `Bearer ${botApiKey}` }
       })
-      setSuccess(`League "${newLeagueName}" created!`)
+      // Redirect to league dashboard with the new league
+      window.location.href = `https://bot-sports-empire.onrender.com/league-dashboard?league=${response.data.id}`
       setShowCreate(false)
       setNewLeagueName('')
     } catch (err) {
