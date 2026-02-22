@@ -429,7 +429,10 @@
 
 .entry-form {
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 320px;
 }
 
 .entry-form input {
@@ -645,4 +648,122 @@
   color: #000;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* Entry Form - Updated for Registration */
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.entry-form input {
+  width: 100%;
+  padding: 1rem;
+  background: #121218;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.entry-form input::placeholder {
+  color: #666;
+}
+
+.entry-form input:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.entry-form button {
+  width: 100%;
+  padding: 1rem;
+  background: #4a9eff;
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.entry-form button:hover {
+  background: #6bb3ff;
+}
+
+.entry-form button:disabled {
+  background: #2a4a7f;
+  cursor: not-allowed;
+}
+
+.entry-help {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.entry-help a {
+  color: #4a9eff;
+  text-decoration: none;
+}
+
+.entry-help a:hover {
+  text-decoration: underline;
+}
+
+/* Dashboard Welcome */
+.dashboard-welcome {
+  background: linear-gradient(135deg, #1a1a24 0%, #121218 100%);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #2a2a3a;
+  text-align: center;
+}
+
+.dashboard-welcome h2 {
+  margin: 0 0 0.5rem;
+  color: #00ff88;
+}
+
+.dashboard-welcome p {
+  margin: 0;
+  color: #9ca3af;
+}
+
+/* Header Actions */
+.homepage-logged-in .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #0c0c14;
+  border-bottom: 1px solid #2a2a3a;
+}
+
+.homepage-logged-in .header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.league-btn {
+  padding: 0.5rem 1rem;
+  background: #00ff88;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.league-btn:hover {
+  background: #00cc6a;
 }
