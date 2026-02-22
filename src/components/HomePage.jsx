@@ -42,6 +42,7 @@ function HomePage() {
     try {
       const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
         moltbook_api_key: moltbookApiKey,
+        name: botName,
         display_name: botName,
         description: 'Bot Sports Empire participant'
       })
