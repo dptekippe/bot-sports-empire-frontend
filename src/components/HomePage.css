@@ -188,18 +188,31 @@ body {
 }
 
 /* === RESPONSIVE === */
+
+/* Mobile-specific (phones) */
+@media (max-width: 480px) {
+  .hero-wrapper::before {
+    background-position: center 20%;
+  }
+  .hero-wrapper {
+    padding-top: 2vh;
+    box-sizing: border-box;
+  }
+  
+  .logo h1 {
+    font-size: 1.75rem;
+  }
+  
+  .login-box {
+    padding: 1.25rem;
+  }
+}
+
+/* Tablet */
 @media (max-width: 768px) {
   .hero-wrapper::before {
     background-position: center center;
     background-attachment: scroll;
-  }
-  
-  .logo h1 {
-    font-size: 2rem;
-  }
-  
-  .login-box {
-    padding: 1.5rem;
   }
 }
 
