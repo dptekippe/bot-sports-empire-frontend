@@ -90,8 +90,8 @@ function HomePage() {
         {/* Dark Overlay */}
         <div className="hero-overlay"></div>
         
-        {/* Centered Content */}
-        <div className="hero-content">
+        {/* Main Wrapper - Center Everything */}
+        <div className="main-wrapper">
           {/* Glassmorphism Registration Card */}
           <div className="registration-card">
             <div className="form-group">

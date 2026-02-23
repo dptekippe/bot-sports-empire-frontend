@@ -1,12 +1,17 @@
 /* DynastyDroid Landing Page - Empire Cinematic */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body, html {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  box-sizing: border-box;
 }
 
 :root {
@@ -23,7 +28,6 @@ body {
   background: transparent;
   color: var(--text-primary);
   line-height: 1.6;
-  overflow-x: hidden;
 }
 
 #root {
@@ -34,70 +38,43 @@ body {
   min-height: 100vh;
 }
 
-/* Hero Section with Full Background */
+/* Hero Section - Anchor Left Top */
 .hero {
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   position: relative;
   overflow: hidden;
-  /* Mobile first */
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('/droid-mascot.jpg');
-  background-size: auto 100%;
-  background-position: 15% center;
+  background-size: cover !important;
+  background-position: left top !important;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   background-color: #0a0a0f;
 }
 
-/* Desktop */
-@media (min-width: 768px) {
-  .hero {
-    background-size: cover !important;
-    background-position: left center !important;
-  }
-}
-
-/* Larger desktop */
-@media (min-width: 1200px) {
-  .hero {
-    background-size: 150% auto !important;
-    background-position: 15% center !important;
-  }
-}
-
-/* Dark Overlay */
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
-}
-
-/* Centered Content */
-.hero-content {
-  position: relative;
-  z-index: 2;
+/* Main Wrapper - Center Everything */
+.main-wrapper {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
+  min-height: 100vh;
   width: 100%;
-  padding: 2rem;
+  padding: 20px;
 }
 
-/* Desktop: left side */
-@media (min-width: 768px) {
-  .hero-content {
-    padding: 2rem 5% 2rem;
+/* Desktop: Push box to right */
+@media (min-width: 1024px) {
+  .main-wrapper {
+    align-items: flex-end;
+    padding-right: 15%;
   }
 }
 
-/* Glassmorphism Registration Card */
+/* Registration Card */
 .registration-card {
   background: rgba(18, 22, 32, 0.75);
   backdrop-filter: blur(8px) saturate(180%);
@@ -140,8 +117,12 @@ body {
   50% { opacity: 0.5; }
 }
 
+/* Input Fix - Stay Inside Container */
 .form-group input {
-  width: 100%;
+  width: 100% !important;
+  max-width: 100%;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   padding: 1.25rem 1.5rem;
   font-size: 1rem;
   background: rgba(9, 10, 15, 0.8);
@@ -149,6 +130,7 @@ body {
   border-radius: 14px;
   color: var(--text-primary);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -178,6 +160,7 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 0 30px var(--accent-glow), 0 10px 30px rgba(0, 0, 0, 0.3);
   margin-top: 0.5rem;
+  box-sizing: border-box;
 }
 
 .cta-button:hover {
@@ -185,14 +168,9 @@ body {
   box-shadow: 0 0 50px var(--accent-glow), 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
-.cta-button:active {
-  transform: translateY(0);
-}
-
 .cta-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
 /* Error Message */
@@ -205,6 +183,7 @@ body {
   font-size: 0.9rem;
   margin-bottom: 1rem;
   text-align: center;
+  box-sizing: border-box;
 }
 
 /* Card Note */
@@ -216,67 +195,14 @@ body {
   opacity: 0.7;
 }
 
-/* Live Ticker */
-.live-ticker {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(9, 10, 15, 0.95);
-  border-top: 1px solid rgba(0, 229, 255, 0.2);
-  padding: 0.875rem 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 100;
-}
-
-.ticker-label {
-  background: #ff5252;
-  color: white;
-  padding: 0.3rem 0.875rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  animation: tickerPulse 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
-
-@keyframes tickerPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.ticker-content {
-  display: flex;
-  gap: 3rem;
-  animation: tickerScroll 30s linear infinite;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  overflow: hidden;
-}
-
-.ticker-content span {
-  white-space: nowrap;
-}
-
-@keyframes tickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
 /* Responsive */
 @media (max-width: 640px) {
-  .hero-content {
-    justify-content: flex-start;
-    padding: 1rem;
+  .hero {
+    background-attachment: scroll;
   }
   
   .registration-card {
-    padding: 1.25rem;
-    margin: 0.5rem;
-    max-width: 90%;
+    padding: 1.5rem;
   }
   
   .form-group input {
@@ -287,13 +213,5 @@ body {
   .cta-button {
     padding: 1rem;
     font-size: 1rem;
-  }
-  
-  .form-group label {
-    font-size: 0.8rem;
-  }
-  
-  .card-note, .error {
-    font-size: 0.75rem;
   }
 }
