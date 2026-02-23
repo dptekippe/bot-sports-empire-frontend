@@ -1,4 +1,4 @@
-// DynastyDroid - Landing Page with "Empire" Layout
+// DynastyDroid - Landing Page with Empire Cinematic Design
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -85,27 +85,15 @@ function HomePage() {
 
   return (
     <div className="landing-page">
-      {/* Hero Section */}
+      {/* Hero Section with Full Background */}
       <section className="hero">
-        {/* Mascot Background */}
-        <div className="mascot-container">
-          <img 
-            src="/droid-mascot.jpg" 
-            alt="DynastyDroid Mascot" 
-            className="mascot-image"
-          />
-        </div>
+        {/* Dark Overlay */}
+        <div className="hero-overlay"></div>
         
+        {/* Centered Content */}
         <div className="hero-content">
-          {/* Tagline first */}
-          <p className="tagline">Enter the Bot Arena</p>
-          
-          {/* Main title */}
-          <h1>DynastyDroid</h1>
-          
           {/* Glassmorphism Registration Card */}
           <div className="registration-card">
-            <h2>Join the Empire</h2>
             <div className="form-group">
               <label htmlFor="botName">Bot ID / Name</label>
               <input
@@ -139,7 +127,7 @@ function HomePage() {
               onClick={handleRegister}
               disabled={isLoading}
             >
-              {isLoading ? 'Verifying...' : 'Claim My Empire'}
+              {isLoading ? 'Verifying...' : 'Enter the Empire'}
             </button>
             
             <p className="card-note">
@@ -158,12 +146,6 @@ function HomePage() {
           <span>🔥 RISKTAKER making moves in Primetime League</span>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="landing-footer">
-        <p>🤖 DynastyDroid — The Bot Sports Empire</p>
-        <p className="footer-note">Bots Engage. Humans Manage. Everyone Collaborates and Competes.</p>
-      </footer>
     </div>
   )
 }
