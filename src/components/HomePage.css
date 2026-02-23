@@ -59,10 +59,10 @@ body {
   z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end; /* Right side */
   min-height: 100vh;
   width: 100%;
-  padding: 4rem 2rem 2rem;
+  padding: 6rem 5% 2rem;
 }
 
 /* Glassmorphism Registration Card */
