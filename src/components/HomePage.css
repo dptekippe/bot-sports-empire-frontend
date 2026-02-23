@@ -1,9 +1,10 @@
 /* DynastyDroid Landing Page - Empire Cinematic */
 
-* {
+body, html {
+  height: 100%;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 :root {
@@ -33,12 +34,13 @@ body {
 
 /* Hero Section with Full Background */
 .hero {
-  min-height: 100dvh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  /* Mobile first - fit height, show left side */
+  overflow: hidden;
+  /* Mobile first */
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('/droid-mascot.jpg');
   background-size: auto 100%;
   background-position: 15% center;
@@ -50,8 +52,16 @@ body {
 @media (min-width: 768px) {
   .hero {
     background-size: cover;
-    background-position: 25% center;
+    background-position: left center;
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/droid-mascot.jpg');
+  }
+}
+
+/* Larger desktop */
+@media (min-width: 1200px) {
+  .hero {
+    background-size: 150% auto;
+    background-position: 20% center;
   }
 }
 
