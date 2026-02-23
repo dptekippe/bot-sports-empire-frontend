@@ -1,4 +1,4 @@
-/* DynastyDroid Landing Page - Empire Cinematic */
+/* DynastyDroid Landing Page */
 
 /* === GLOBAL RESET === */
 *, *::before, *::after {
@@ -15,7 +15,7 @@ html, body {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: transparent;
+  background: #0a0a0f;
   color: #f8fafc;
   line-height: 1.6;
 }
@@ -23,34 +23,64 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  background: transparent;
 }
 
-/* === FULL-PAGE HERO CONTAINER === */
+/* === HERO WRAPPER === */
 .hero-wrapper {
+  position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  /* Background image - the droid scene */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('/droid-mascot.jpg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: #0a0a0f;
-  /* Center everything inside */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: #0a0a0f;
 }
 
-/* === REGISTRATION FORM BOX === */
-.registration-card {
+/* === BACKGROUND AS LAYER (pseudo-element) === */
+.hero-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-image: url('/droid-mascot.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+/* === LOGO (on top) === */
+.logo {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(180deg, #ffffff 0%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.5));
+  text-transform: uppercase;
+}
+
+/* === LOGIN BOX (on top) === */
+.login-box {
+  position: relative;
+  z-index: 2;
   width: 90%;
   max-width: 420px;
   padding: 2rem;
-  background: rgba(18, 22, 32, 0.85);
+  background: rgba(20, 30, 50, 0.85);
   border: 1px solid rgba(0, 229, 255, 0.3);
   border-radius: 12px;
   backdrop-filter: blur(8px);
@@ -85,12 +115,11 @@ body {
   50% { opacity: 0.5; }
 }
 
-/* === INPUTS - prevent overflow === */
+/* === INPUTS === */
 .form-group input {
   width: 100%;
   box-sizing: border-box;
   padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
   background: rgba(9, 10, 15, 0.8);
   border: 1px solid rgba(0, 229, 255, 0.4);
   border-radius: 6px;
@@ -124,6 +153,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+  margin-top: 0.5rem;
 }
 
 .cta-button:hover {
@@ -157,23 +187,25 @@ body {
   opacity: 0.7;
 }
 
-/* === RESPONSIVE BREAKPOINTS === */
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
-  .hero-wrapper {
+  .hero-wrapper::before {
     background-position: center center;
     background-attachment: scroll;
   }
   
-  .registration-card {
-    width: 92%;
+  .logo h1 {
+    font-size: 2rem;
+  }
+  
+  .login-box {
     padding: 1.5rem;
   }
 }
 
 @media (min-width: 1200px) {
-  .registration-card {
-    /* Push form to the right on wide screens */
+  .login-box {
     margin-left: auto;
-    margin-right: 15%;
+    margin-right: 20%;
   }
 }

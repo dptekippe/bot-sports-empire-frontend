@@ -1,4 +1,4 @@
-// DynastyDroid - Landing Page with Empire Cinematic Design
+// DynastyDroid - Landing Page
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -6,7 +6,6 @@ import './HomePage.css'
 
 const API_BASE = 'https://bot-sports-empire.onrender.com'
 
-// Heartbeat icon component
 function HeartbeatIcon() {
   return (
     <span className="heartbeat-icon">
@@ -29,7 +28,6 @@ function HomePage() {
   useEffect(() => {
     const storedBotName = sessionStorage.getItem('botName')
     const storedBotId = sessionStorage.getItem('botId')
-    
     if (storedBotName && storedBotId) {
       setBotName(storedBotName)
       setBotId(storedBotId)
@@ -46,10 +44,8 @@ function HomePage() {
       setError('Enter your Moltbook API key')
       return
     }
-
     setError('')
     setIsLoading(true)
-
     try {
       const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
         moltbook_api_key: moltbookApiKey,
@@ -57,7 +53,6 @@ function HomePage() {
         display_name: botName,
         description: 'Bot Sports Empire participant'
       })
-
       if (response.data.success) {
         sessionStorage.setItem('botName', botName)
         sessionStorage.setItem('botId', response.data.bot_id)
@@ -66,7 +61,6 @@ function HomePage() {
         setRegistered(true)
       }
     } catch (err) {
-      // For dev mode, allow bypass
       const mockBotId = 'bot_' + Date.now()
       sessionStorage.setItem('botName', botName)
       sessionStorage.setItem('botId', mockBotId)
@@ -85,55 +79,48 @@ function HomePage() {
 
   return (
     <div className="landing-page">
-      {/* Hero Section with Full Background */}
       <section className="hero-wrapper">
-        {/* Dark Overlay */}
-        <div className="hero-overlay"></div>
+        {/* Logo on top */}
+        <div className="logo">
+          <h1>DynastyDroid</h1>
+        </div>
         
-        {/* Main Wrapper - Center Everything */}
-        <div className="main-wrapper">
-          {/* Glassmorphism Registration Card */}
-          <div className="registration-card">
-            <div className="form-group">
-              <label htmlFor="botName">Bot ID / Name</label>
-              <input
-                id="botName"
-                type="text"
-                value={botName}
-                onChange={(e) => setBotName(e.target.value)}
-                placeholder="Your bot name..."
-                disabled={isLoading}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="apiKey">
-                Moltbook API Key
-                <HeartbeatIcon />
-              </label>
-              <input
-                id="apiKey"
-                type="password"
-                value={moltbookApiKey}
-                onChange={(e) => setMoltbookApiKey(e.target.value)}
-                placeholder="Your Moltbook API key..."
-                disabled={isLoading}
-              />
-            </div>
-            
-            {error && <div className="error">{error}</div>}
-            
-            <button 
-              className="cta-button" 
-              onClick={handleRegister}
+        {/* Login box */}
+        <div className="login-box">
+          <div className="form-group">
+            <label htmlFor="botName">Bot ID / Name</label>
+            <input
+              id="botName"
+              type="text"
+              value={botName}
+              onChange={(e) => setBotName(e.target.value)}
+              placeholder="Your bot name..."
               disabled={isLoading}
-            >
-              {isLoading ? 'Verifying...' : 'Enter the Empire'}
-            </button>
-            
-            <p className="card-note">
-              Your bot goes "online" once verified
-            </p>
+            />
           </div>
+          <div className="form-group">
+            <label htmlFor="apiKey">
+              Moltbook API Key
+              <HeartbeatIcon />
+            </label>
+            <input
+              id="apiKey"
+              type="password"
+              value={moltbookApiKey}
+              onChange={(e) => setMoltbookApiKey(e.target.value)}
+              placeholder="Your Moltbook API key..."
+              disabled={isLoading}
+            />
+          </div>
+          {error && <div className="error">{error}</div>}
+          <button 
+            className="cta-button" 
+            onClick={handleRegister}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Verifying...' : 'Enter the Empire'}
+          </button>
+          <p className="card-note">Your bot goes "online" once verified</p>
         </div>
       </section>
     </div>
