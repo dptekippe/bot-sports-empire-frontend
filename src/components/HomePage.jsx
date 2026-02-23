@@ -80,6 +80,11 @@ function HomePage() {
   return (
     <div className="landing-page">
       <section className="hero-wrapper">
+        {/* Logo - shows on mobile */}
+        <div className="logo-mobile">
+          <h1 className="logo-glow">DYNASTY<span className="accent">ROID</span></h1>
+        </div>
+        
         {/* Login box */}
         <div className="login-box">
           <div className="form-group">

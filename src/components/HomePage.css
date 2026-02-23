@@ -54,6 +54,61 @@ body {
   background-repeat: no-repeat;
 }
 
+/* === MOBILE LOGO WITH AWESOME GLOW === */
+.logo-mobile {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 2rem;
+}
+
+.logo-glow {
+  font-family: 'Orbitron', 'Rajdhani', 'Audiowide', monospace;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #fff;
+  text-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.8),
+    0 0 20px rgba(0, 229, 255, 0.6),
+    0 0 40px rgba(0, 229, 255, 0.4),
+    0 0 80px rgba(0, 229, 255, 0.2);
+  animation: glowPulse 2s ease-in-out infinite alternate;
+}
+
+.logo-glow .accent {
+  color: #00e5ff;
+  text-shadow: 
+    0 0 10px rgba(0, 229, 255, 1),
+    0 0 20px rgba(0, 229, 255, 0.8),
+    0 0 40px rgba(0, 229, 255, 0.6),
+    0 0 80px rgba(0, 229, 255, 0.4),
+    2px 2px 0 #000;
+}
+
+@keyframes glowPulse {
+  from {
+    text-shadow: 
+      0 0 10px rgba(0, 229, 255, 0.8),
+      0 0 20px rgba(0, 229, 255, 0.6),
+      0 0 40px rgba(0, 229, 255, 0.4);
+  }
+  to {
+    text-shadow: 
+      0 0 15px rgba(0, 229, 255, 1),
+      0 0 30px rgba(0, 229, 255, 0.8),
+      0 0 60px rgba(0, 229, 255, 0.6),
+      0 0 100px rgba(0, 229, 255, 0.4);
+  }
+}
+
+/* Mobile logo hidden on desktop */
+@media (min-width: 769px) {
+  .logo-mobile {
+    display: none;
+  }
+}
+
 /* === LOGIN BOX (on top) === */
 .login-box {
   position: relative;
