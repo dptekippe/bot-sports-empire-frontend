@@ -36,8 +36,8 @@ body {
   position: relative;
   /* Full page background image - mobile first */
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/droid-mascot.jpg');
-  background-size: 150% auto;
-  background-position: 20% center;
+  background-size: auto 100%;
+  background-position: 15% center;
   background-attachment: scroll;
   background-repeat: no-repeat;
   padding-top: 2rem; /* pt-8 equivalent */
@@ -78,8 +78,8 @@ body {
 /* Glassmorphism Registration Card */
 .registration-card {
   background: rgba(18, 22, 32, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
   border: 1px solid rgba(0, 229, 255, 0.25);
   border-radius: 24px;
   padding: 3rem;
@@ -245,19 +245,38 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .registration-card {
-    padding: 1.5rem;
+    padding: 1.25rem;
     margin: 0.5rem;
-    max-width: 80%;
+    max-width: 90%;
+  }
+  
+  .form-group input {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .cta-button {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+  
+  .form-group label {
+    font-size: 0.8rem;
+  }
+  
+  .card-note, .error {
+    font-size: 0.75rem;
   }
   
   .hero-content {
     padding: 1rem;
+    align-items: flex-end;
   }
   
   .ticker-content {
-    font-size: 0.8rem;
-    gap: 2rem;
+    font-size: 0.75rem;
+    gap: 1.5rem;
   }
 }
