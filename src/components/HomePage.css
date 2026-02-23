@@ -54,11 +54,9 @@ body {
   background-repeat: no-repeat;
 }
 
-/* === MOBILE LOGO WITH AWESOME GLOW === */
+/* Mobile logo hidden */
 .logo-mobile {
-  position: relative;
-  z-index: 2;
-  margin-bottom: 2rem;
+  display: none;
 }
 
 .logo-glow {
@@ -228,7 +226,8 @@ body {
 /* Mobile-specific (phones portrait) */
 @media (max-width: 480px) and (orientation: portrait) {
   .hero-wrapper::before {
-    background-position: center top;
+    background-image: url('/droid-mascot-mobile.png');
+    background-position: center center;
   }
 }
 
