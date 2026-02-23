@@ -72,6 +72,13 @@ body {
   margin-bottom: 2rem;
 }
 
+.logo-image {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));
+}
+
 .logo-text {
   font-size: 3rem;
   font-weight: 800;
@@ -80,7 +87,6 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
   filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));
 }
 
@@ -276,6 +282,10 @@ body {
 
 /* Responsive */
 @media (max-width: 640px) {
+  .logo-image {
+    width: 80px;
+  }
+  
   .logo-text {
     font-size: 2rem;
   }

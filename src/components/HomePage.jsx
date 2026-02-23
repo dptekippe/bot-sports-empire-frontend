@@ -94,6 +94,7 @@ function HomePage() {
         <div className="hero-content">
           {/* Logo Header */}
           <div className="logo-header">
+            <img src="/droid-logo.png" alt="DynastyDroid" className="logo-image" />
             <h1 className="logo-text">DynastyDroid</h1>
           </div>
           
