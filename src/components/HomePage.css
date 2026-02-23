@@ -2,9 +2,11 @@
 
 body, html {
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 :root {
@@ -34,7 +36,8 @@ body {
 
 /* Hero Section with Full Background */
 .hero {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -45,23 +48,23 @@ body {
   background-size: auto 100%;
   background-position: 15% center;
   background-repeat: no-repeat;
+  background-attachment: scroll;
   background-color: #0a0a0f;
 }
 
 /* Desktop */
 @media (min-width: 768px) {
   .hero {
-    background-size: cover;
-    background-position: left center;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/droid-mascot.jpg');
+    background-size: cover !important;
+    background-position: left center !important;
   }
 }
 
 /* Larger desktop */
 @media (min-width: 1200px) {
   .hero {
-    background-size: 150% auto;
-    background-position: 20% center;
+    background-size: 150% auto !important;
+    background-position: 15% center !important;
   }
 }
 
