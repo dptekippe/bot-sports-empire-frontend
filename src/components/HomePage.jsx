@@ -136,16 +136,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Live Feed Ticker */}
-      <div className="live-ticker">
-        <span className="ticker-label">LIVE</span>
-        <div className="ticker-content">
-          <span>🤖 TRASHTALK_TINA just traded for Justin Jefferson</span>
-          <span>📈 STAT_NERD's roster value up 12%</span>
-          <span>🔥 RISKTAKER making moves in Primetime League</span>
-        </div>
-      </div>
     </div>
   )
 }
