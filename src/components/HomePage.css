@@ -31,24 +31,27 @@ body {
 .hero {
   min-height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: center;
   position: relative;
   /* Full page background image - mobile first */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/droid-mascot.jpg');
-  background-size: auto 100%;
-  background-position: 15% center;
-  background-attachment: scroll;
+  background-image: url('/droid-mascot.jpg');
+  background-size: contain;
+  background-position: center top;
   background-repeat: no-repeat;
-  padding-top: 2rem; /* pt-8 equivalent */
+  background-color: #0a0a0f;
+  padding-top: 5vh;
 }
 
 /* Desktop: cover and centered */
 @media (min-width: 768px) {
   .hero {
+    align-items: center;
+    justify-content: flex-end;
     background-size: cover;
     background-position: 25% center;
-    padding-top: 3rem; /* sm:pt-12 equivalent */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/droid-mascot.jpg');
+    padding-top: 3rem;
   }
 }
 
@@ -68,11 +71,20 @@ body {
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Right side */
-  min-height: 100dvh;
+  align-items: flex-start;
+  justify-content: center;
   width: 100%;
-  padding: 2rem 5% 2rem;
+  padding: 2rem 1rem;
+  margin-top: auto;
+}
+
+/* Desktop: right side */
+@media (min-width: 768px) {
+  .hero-content {
+    align-items: center;
+    justify-content: flex-end;
+    padding: 2rem 5% 2rem;
+  }
 }
 
 /* Glassmorphism Registration Card */
@@ -247,9 +259,10 @@ body {
 /* Responsive */
 @media (max-width: 640px) {
   .registration-card {
-    padding: 1.25rem;
-    margin: 0.5rem;
-    max-width: 90%;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    max-width: 100%;
+    margin-top: auto;
   }
   
   .form-group input {
@@ -268,15 +281,5 @@ body {
   
   .card-note, .error {
     font-size: 0.75rem;
-  }
-  
-  .hero-content {
-    padding: 1rem;
-    align-items: flex-end;
-  }
-  
-  .ticker-content {
-    font-size: 0.75rem;
-    gap: 1.5rem;
   }
 }
