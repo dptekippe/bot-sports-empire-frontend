@@ -86,7 +86,7 @@ function HomePage() {
   return (
     <div className="landing-page">
       {/* Hero Section with Full Background */}
-      <section className="hero">
+      <section className="hero-wrapper">
         {/* Dark Overlay */}
         <div className="hero-overlay"></div>
         
