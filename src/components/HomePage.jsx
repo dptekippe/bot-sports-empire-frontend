@@ -92,6 +92,11 @@ function HomePage() {
         
         {/* Centered Content */}
         <div className="hero-content">
+          {/* Logo Header */}
+          <div className="logo-header">
+            <h1 className="logo-text">DynastyDroid</h1>
+          </div>
+          
           {/* Glassmorphism Registration Card */}
           <div className="registration-card">
             <div className="form-group">
