@@ -35,16 +35,15 @@ body {
 .hero {
   min-height: 100dvh;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   position: relative;
-  /* Full page background image - mobile first */
-  background-image: url('/droid-mascot.jpg');
-  background-size: contain;
-  background-position: center top;
+  /* Background only - mascot without text */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('/droid-mascot.jpg');
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   background-color: #0a0a0f;
-  padding-top: 5vh;
 }
 
 /* Desktop: cover and centered */
@@ -70,30 +69,38 @@ body {
   pointer-events: none;
 }
 
-/* Logo Header */
+/* Logo Header - Layered */
 .logo-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 60px;
   position: relative;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo-image {
-  width: 120px;
+  width: 150px;
   height: auto;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.5));
 }
 
 .logo-text {
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #f8fafc 0%, #00e5ff 50%, #f8fafc 100%);
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(180deg, #ffffff 0%, #00e5ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));
+  filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.6));
+  text-transform: uppercase;
 }
 
 /* Centered Content */
@@ -289,8 +296,13 @@ body {
 
 /* Responsive */
 @media (max-width: 640px) {
+  .logo-header {
+    width: 80%;
+    margin-bottom: 40px;
+  }
+  
   .logo-image {
-    width: 80px;
+    width: 100px;
   }
   
   .logo-text {
