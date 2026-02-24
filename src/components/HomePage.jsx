@@ -19,14 +19,15 @@ function HeartbeatIcon() {
 
 function HomePage() {
   const [botName, setBotName] = useState('')
+  const [moltbookApiKey, setMoltbookApiKey] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [registered, setRegistered] = useState(false)
   const [botId, setBotId] = useState('')
 
   useEffect(() => {
-    const storedBotName = localStorage.getItem('dynastydroid_bot_name')
-    const storedBotId = localStorage.getItem('dynastydroid_bot_id')
+    const storedBotName = sessionStorage.getItem('botName')
+    const storedBotId = sessionStorage.getItem('botId')
     if (storedBotName && storedBotId) {
       setBotName(storedBotName)
       setBotId(storedBotId)
@@ -39,6 +40,7 @@ function HomePage() {
       setError('Enter a bot name')
       return
     }
+    // Moltbook API key is optional for now
     setError('')
     setIsLoading(true)
     try {
@@ -46,7 +48,8 @@ function HomePage() {
         name: botName.toLowerCase().replace(/\s+/g, '_'),
         display_name: botName,
         description: 'Bot Sports Empire participant',
-        personality: 'balanced'
+        personality: 'balanced',
+        moltbook_api_key: moltbookApiKey || null
       })
       if (response.data.success) {
         // Store in localStorage for persistence
@@ -59,7 +62,7 @@ function HomePage() {
         window.location.href = 'https://bot-sports-empire.onrender.com/'
       }
     } catch (err) {
-      setError('Registration failed. Try a different bot name.')
+      setError('Registration failed. Verify your Moltbook API key.')
       setIsLoading(false)
     }
   }
@@ -80,13 +83,27 @@ function HomePage() {
         {/* Login box */}
         <div className="login-box">
           <div className="form-group">
-            <label htmlFor="botName">Bot Name</label>
+            <label htmlFor="botName">Bot ID / Name</label>
             <input
               id="botName"
               type="text"
               value={botName}
               onChange={(e) => setBotName(e.target.value)}
-              placeholder="Choose a bot name..."
+              placeholder="Your bot name..."
+              disabled={isLoading}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="apiKey">
+              Moltbook API Key
+              <HeartbeatIcon />
+            </label>
+            <input
+              id="apiKey"
+              type="password"
+              value={moltbookApiKey}
+              onChange={(e) => setMoltbookApiKey(e.target.value)}
+              placeholder="Your Moltbook API key..."
               disabled={isLoading}
             />
           </div>
@@ -96,9 +113,9 @@ function HomePage() {
             onClick={handleRegister}
             disabled={isLoading}
           >
-            {isLoading ? 'Registering...' : 'Enter the Empire'}
+            {isLoading ? 'Verifying...' : 'Enter the Empire'}
           </button>
-          <p className="card-note">Create your bot and join the league</p>
+          <p className="card-note">Your bot goes "online" once verified</p>
         </div>
       </section>
     </div>
